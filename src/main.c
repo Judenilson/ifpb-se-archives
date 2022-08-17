@@ -1,4 +1,5 @@
-
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -15,7 +16,6 @@
 #include "driver/gpio.h"
 #include "sdkconfig.h"
 #include "rc522.c"
-#include "string.h"
 
 #define WIFI_SSID		"Judenilson"
 #define WIFI_PASSWORD	"Judenilson82"
@@ -32,8 +32,25 @@ static EventGroupHandle_t s_wifi_event_group;
 static uint8_t light_state = 0; // off
 static int s_retry_num = 0;
 
+char lista_resp[200] = "TAG Atual: ";
+
 void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
-    printf("Tag: %#x %#x %#x %#x %#x \n", sn[0], sn[1], sn[2], sn[3], sn[4]);
+    char vazia[200] = "TAG Atual: ";
+    strcpy(lista_resp, vazia);
+
+    char tag[15] = "";
+
+    for (int i = 0; i < 5; i++){
+        int num = sn[i];
+        char snum[5];
+        snprintf(snum, 5, "%d", num);        
+        strcat(tag, snum);
+    }
+
+    vTaskDelay(10);
+
+    printf("%s \n", tag);
+    strcat(lista_resp, tag);
 
     gpio_set_level(RELE_PIN, 1);
     vTaskDelay(100);
@@ -124,7 +141,7 @@ const char menu_resp[] = "<h3>Controle de Presen&ccedila</h3><button><a href=\"/
 const char on_resp[] = "<h3>LUZES da Sala: ACESAS</h3><a href=\"/on\"><button>LIGAR</button></a><a href=\"/off\"><button>DESLIGAR</button</a><a href=\"/\"><button>VOLTAR</button</a>";
 const char off_resp[] = "<h3>LUZES da Sala: APAGADAS</h3><a href=\"/on\"><button>LIGAR</button></a><a href=\"/off\"><button>DESLIGAR</button</a><a href=\"/\"><button>VOLTAR</button</a>";
 const char telegram_resp[] = "<object width='0' height='0' type='text/html' data='https://api.telegram.org/bot5775630816:AAEuxojQRdMLpiVQINcnt0_iMWv87YQjsaM/sendMessage?chat_id=-708112312&text=AULA_INICIADA!!!'></object>Mensagem Enviada para o Telegram!<br><br><a href=\"/\"><button>VOLTAR</button</a>";
-const char lista_resp[] = "";
+
 
 esp_err_t get_handler(httpd_req_t *req)
 {	
@@ -134,7 +151,7 @@ esp_err_t get_handler(httpd_req_t *req)
 
 esp_err_t lista_handler(httpd_req_t *req)
 {	
-	httpd_resp_send(req, lista_resp, HTTPD_RESP_USE_STRLEN);
+	httpd_resp_sendstr(req, lista_resp);
     return ESP_OK;
 }
 
@@ -180,7 +197,7 @@ httpd_uri_t uri_get = {
 httpd_uri_t uri_lista = {
     .uri      = "/lista",
     .method   = HTTP_GET,
-    .handler  = get_handler,
+    .handler  = lista_handler,
     .user_ctx = NULL
 };
 
@@ -231,8 +248,8 @@ httpd_handle_t setup_server(void)
 }
 
 void app_main(void)
-{
-    const rc522_start_args_t start_args = {
+{    
+    const rc522_start_args_t rfid = {
         .miso_io  = 25,
         .mosi_io  = 23,
         .sck_io   = 19,
@@ -240,7 +257,7 @@ void app_main(void)
         .callback = &tag_handler,
     };
 
-    rc522_start(start_args);
+    rc522_start(rfid);
 
     gpio_set_direction(RELE_PIN, GPIO_MODE_OUTPUT);
 	gpio_set_level(RELE_PIN, 0);
