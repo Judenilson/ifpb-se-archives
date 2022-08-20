@@ -29,33 +29,12 @@ static EventGroupHandle_t s_wifi_event_group;
 #define WIFI_CONNECTED_BIT BIT0
 #define WIFI_FAIL_BIT      BIT1
 
+static const char* TAGM = "MainAPP";
+
 static uint8_t light_state = 0; // off
 static int s_retry_num = 0;
 
 char lista_resp[200] = "TAG Atual: ";
-
-void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
-    char vazia[200] = "TAG Atual: ";
-    strcpy(lista_resp, vazia);
-
-    char tag[15] = "";
-
-    for (int i = 0; i < 5; i++){
-        int num = sn[i];
-        char snum[5];
-        snprintf(snum, 5, "%d", num);        
-        strcat(tag, snum);
-    }
-
-    vTaskDelay(10);
-
-    printf("%s \n", tag);
-    strcat(lista_resp, tag);
-
-    gpio_set_level(RELE_PIN, 1);
-    vTaskDelay(100);
-    gpio_set_level(RELE_PIN, 0);
-}
 
 static void event_handler(void* arg, esp_event_base_t event_base,
                                 int32_t event_id, void* event_data)
@@ -66,14 +45,14 @@ static void event_handler(void* arg, esp_event_base_t event_base,
         if (s_retry_num < MAXIMUM_RETRY) {
             esp_wifi_connect();
             s_retry_num++;
-            ESP_LOGI(TAG, "Tente reconectar ao AP");
+            ESP_LOGI(TAGM, "Tente reconectar ao AP");
         } else {
             xEventGroupSetBits(s_wifi_event_group, WIFI_FAIL_BIT);
         }
-        ESP_LOGI(TAG,"Falha de conexao com o AP");
+        ESP_LOGI(TAGM,"Falha de conexao com o AP");
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
-        ESP_LOGI(TAG, "IP:" IPSTR, IP2STR(&event->ip_info.ip));
+        ESP_LOGI(TAGM, "IP:" IPSTR, IP2STR(&event->ip_info.ip));
         s_retry_num = 0;
         xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
     }
@@ -114,7 +93,7 @@ void wifi_init_sta(void)
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config) );
     ESP_ERROR_CHECK(esp_wifi_start() );
 
-    ESP_LOGI(TAG, "wifi_init_sta finalizado.");
+    ESP_LOGI(TAGM, "wifi_init_sta finalizado.");
 
     /* Aguardando até que a conexão seja estabelecida (WIFI_CONNECTED_BIT) ou a conexão falhe pelo máximo
     número de tentativas (WIFI_FAIL_BIT). */
@@ -127,19 +106,19 @@ void wifi_init_sta(void)
     /* xEventGroupWaitBits() retorna os bits antes da chamada ser retornada, portanto, podemos testar 
     qual evento realmente aconteceu. */
     if (bits & WIFI_CONNECTED_BIT) {
-        ESP_LOGI(TAG, "Conectado ao AP SSID:%s password:%s",
+        ESP_LOGI(TAGM, "Conectado ao AP SSID:%s password:%s",
                  WIFI_SSID, WIFI_PASSWORD);
     } else if (bits & WIFI_FAIL_BIT) {
-        ESP_LOGI(TAG, "Falha em conectar ao AP SSID:%s, password:%s",
+        ESP_LOGI(TAGM, "Falha em conectar ao AP SSID:%s, password:%s",
                  WIFI_SSID, WIFI_PASSWORD);
     } else {
-        ESP_LOGE(TAG, "EVENTO INESPERADO");
+        ESP_LOGE(TAGM, "EVENTO INESPERADO");
     }
 }
 
 const char menu_resp[] = "<h3>Controle de Presen&ccedila</h3><button><a href=\"/light\">Luzes</a></button><br><button><a href=\"/lista\">Lista de Presen&ccedila</a></button><br><br><br><button><a href=\"/telegram\">Iniciar Aula</button></a>";
-const char on_resp[] = "<h3>LUZES da Sala: ACESAS</h3><a href=\"/on\"><button>LIGAR</button></a><a href=\"/off\"><button>DESLIGAR</button</a><a href=\"/\"><button>VOLTAR</button</a>";
-const char off_resp[] = "<h3>LUZES da Sala: APAGADAS</h3><a href=\"/on\"><button>LIGAR</button></a><a href=\"/off\"><button>DESLIGAR</button</a><a href=\"/\"><button>VOLTAR</button</a>";
+const char on_resp[] = "<h3>LUZES da Sala: ACESAS</h3><a href=\"/off\"><button>DESLIGAR</button</a><a href=\"/\"><button>VOLTAR</button</a>";
+const char off_resp[] = "<h3>LUZES da Sala: APAGADAS</h3><a href=\"/on\"><button>LIGAR</button></a><a href=\"/\"><button>VOLTAR</button</a>";
 const char telegram_resp[] = "<object width='0' height='0' type='text/html' data='https://api.telegram.org/bot5775630816:AAEuxojQRdMLpiVQINcnt0_iMWv87YQjsaM/sendMessage?chat_id=-708112312&text=AULA_INICIADA!!!'></object>Mensagem Enviada para o Telegram!<br><br><a href=\"/\"><button>VOLTAR</button</a>";
 
 
@@ -247,6 +226,55 @@ httpd_handle_t setup_server(void)
     return server;
 }
 
+void adicionarLista (char tag[], char nome[], int index){
+    int pos = index * 50;
+    int j = 0;
+
+    for (int i = pos; i < (pos + 20); i++){
+        lista_resp[i] = tag[j];
+        j++;
+    }
+    
+    j = 0;
+    for (int i = (pos + 20); i < (pos + 50); i++){
+        lista_resp[i] = nome[j];
+        j++;
+    }
+}
+
+void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
+    char vazia[200] = "TAG Atual: ";
+    strcpy(lista_resp, vazia);
+
+    char tag[20] = "";    
+    char nome[35] = "Judenilson";
+    for(int i = 10; i < 35; i++){
+        nome[i] = ' ';
+    }nome[35] = '\n';
+
+    for (int i = 0; i < 5; i++){
+        int num = sn[i];
+        char snum[5], ponto[2] = {'.'};
+        snprintf(snum, 5, "%d", num);        
+        strcat(tag, snum);
+        strcat(tag, ponto);
+    }
+    
+    adicionarLista(tag, nome, 0);
+    for (int i = 0; i < 200; i++){
+        printf("%c", lista_resp[i]);
+    } printf("\n");
+
+    vTaskDelay(10);
+
+    // printf("%s \n", tag);
+    strcat(lista_resp, tag);
+
+    gpio_set_level(RELE_PIN, 1);
+    vTaskDelay(100);
+    gpio_set_level(RELE_PIN, 0);
+}
+
 void app_main(void)
 {    
     const rc522_start_args_t rfid = {
@@ -274,7 +302,7 @@ void app_main(void)
     }
     ESP_ERROR_CHECK(ret);
 
-    ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
+    ESP_LOGI(TAGM, "ESP_WIFI_MODE_STA");
     wifi_init_sta();        
 	setup_server();
 }
