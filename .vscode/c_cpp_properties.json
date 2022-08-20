@@ -127,6 +127,7 @@
                 "C:/Users/juden/.platformio/packages/framework-espidf/components/spiffs/include",
                 "C:/Users/juden/.platformio/packages/framework-espidf/components/ulp/include",
                 "C:/Users/juden/.platformio/packages/framework-espidf/components/wifi_provisioning/include",
+                "D:/DEV/projeto__micro/projeto_se/components/Lista",
                 "D:/DEV/projeto__micro/projeto_se/components/rc522",
                 ""
             ],
@@ -252,6 +253,7 @@
                     "C:/Users/juden/.platformio/packages/framework-espidf/components/spiffs/include",
                     "C:/Users/juden/.platformio/packages/framework-espidf/components/ulp/include",
                     "C:/Users/juden/.platformio/packages/framework-espidf/components/wifi_provisioning/include",
+                    "D:/DEV/projeto__micro/projeto_se/components/Lista",
                     "D:/DEV/projeto__micro/projeto_se/components/rc522",
                     ""
                 ]

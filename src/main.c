@@ -34,7 +34,9 @@ static const char* TAGM = "MainAPP";
 static uint8_t light_state = 0; // off
 static int s_retry_num = 0;
 
-char lista_resp[200] = "TAG Atual: ";
+char lista_resp[2000] = "TAG Atual: ";
+char lista[2000] = "";
+int indexLista = 0;
 
 static void event_handler(void* arg, esp_event_base_t event_base,
                                 int32_t event_id, void* event_data)
@@ -226,29 +228,62 @@ httpd_handle_t setup_server(void)
     return server;
 }
 
-void adicionarLista (char tag[], char nome[], int index){
-    int pos = index * 50;
+void adicionarLista (char tag[], char nome[], int idx){
+    int pos = idx * 50;
     int j = 0;
 
     for (int i = pos; i < (pos + 20); i++){
-        lista_resp[i] = tag[j];
+        lista[i] = tag[j];
         j++;
     }
     
     j = 0;
     for (int i = (pos + 20); i < (pos + 50); i++){
-        lista_resp[i] = nome[j];
+        lista[i] = nome[j];
         j++;
+    }    
+    indexLista++;
+}
+
+int existeTagLista (char tag[]){
+    int tamTAG = 20;
+    int tamLIST = (int)sizeof(lista);
+    int i = 0;
+    int j = 0;
+    int checkPontos = 0;
+    int idx = 0;
+    while (i < tamLIST){
+        idx = i/50;
+        if (j < tamTAG){
+            if (lista[i] == tag[j]){
+                j++;
+                i++;
+                if (tag[j] == '.'){
+                    checkPontos++;
+                }
+                if (checkPontos == 5){
+                    printf("Achou tag com index %d \n", idx);
+                    return idx;
+                }
+            } else {
+                i = (idx + 1)*50;
+                checkPontos = 0;
+            }        
+        } else {
+            j = 0;
+        }
     }
+    printf("NÃO Achou tag \n");
+    return -1;
 }
 
 void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
-    char vazia[200] = "TAG Atual: ";
+    char vazia[2000] = "TAG Atual: ";
     strcpy(lista_resp, vazia);
 
     char tag[20] = "";    
-    char nome[35] = "Judenilson";
-    for(int i = 10; i < 35; i++){
+    char nome[30] = "Judenilson";
+    for(int i = 10; i < 30; i++){
         nome[i] = ' ';
     }nome[35] = '\n';
 
@@ -259,15 +294,21 @@ void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
         strcat(tag, snum);
         strcat(tag, ponto);
     }
+
+    if (existeTagLista(tag) == -1){
+        adicionarLista(tag, nome, indexLista);
+    }
     
-    adicionarLista(tag, nome, 0);
-    for (int i = 0; i < 200; i++){
-        printf("%c", lista_resp[i]);
-    } printf("\n");
+    for (int i = 0; i < 200; i++){ //usado 200 pra ficar fácil de observar no console. Pra enxergar o array completo tem q ser 2000.
+        printf("%c", lista[i]);
+        if ((i % 49 == 0) && (i > 0)){
+            printf("\n");        
+        }
+    } 
+    printf("\n");
 
     vTaskDelay(10);
 
-    // printf("%s \n", tag);
     strcat(lista_resp, tag);
 
     gpio_set_level(RELE_PIN, 1);
