@@ -267,7 +267,7 @@ httpd_uri_t uri_cadastro = {
 httpd_uri_t uri_cadastrar = {
     .uri      = "/cadastrar",
     .method   = HTTP_POST,
-    .handler  = cadastro_form_handler,
+    .handler  = cadastrar_aluno_handler,
     .user_ctx = NULL
 };
 
