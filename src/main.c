@@ -135,14 +135,14 @@ esp_err_t cadastro_form_handler(httpd_req_t *req)
 
 esp_err_t cadastrar_aluno_handler(httpd_req_t *req)
 {
-    ESP_LOGI(TAG, "/echo handler read content length %d", req->content_len);
+    ESP_LOGI(TAGM, "/echo handler read content length %d", req->content_len);
 
     char*  buf = malloc(req->content_len + 1);
     size_t off = 0;
     int    ret;
 
     if (!buf) {
-        ESP_LOGE(TAG, "Failed to allocate memory of %d bytes!", req->content_len + 1);
+        ESP_LOGE(TAGM, "Failed to allocate memory of %d bytes!", req->content_len + 1);
         httpd_resp_send_500(req);
         return ESP_FAIL;
     }
@@ -154,16 +154,16 @@ esp_err_t cadastrar_aluno_handler(httpd_req_t *req)
             if (ret == HTTPD_SOCK_ERR_TIMEOUT) {
                 httpd_resp_send_408(req);
             }
-            free (buf);
+            free(buf);
             return ESP_FAIL;
         }
         off += ret;
-        ESP_LOGI(TAG, "/echo handler recv length %d", ret);
+        ESP_LOGI(TAGM, "/echo handler recv length %d", ret);
     }
     buf[off] = '\0';
 
     if (req->content_len < 128) {
-        ESP_LOGI(TAG, "/echo handler read %s", buf);
+        ESP_LOGI(TAGM, "/echo handler read %s", buf);
     }
 
     /* Search for Custom header field */
@@ -183,8 +183,8 @@ esp_err_t cadastrar_aluno_handler(httpd_req_t *req)
         httpd_resp_set_hdr(req, "Custom", req_hdr);
     }
     httpd_resp_send(req, buf, req->content_len);
-    free (req_hdr);
-    free (buf);
+    free(req_hdr);
+    free(buf);
     return ESP_OK;
 }
 
@@ -420,7 +420,6 @@ void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
 
 void app_main(void)
 {
-        
     const rc522_start_args_t rfid = {
         .miso_io  = 25,
         .mosi_io  = 23,
