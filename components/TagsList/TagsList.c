@@ -5,6 +5,8 @@
 
 TagsList *CreateTagsList() {
   TagsList *newTagsList = (TagsList *)malloc(sizeof(TagsList));
+  newTagsList->len = 0;
+  newTagsList->firstNode = NULL;
   return newTagsList;
 }
 
