@@ -16,8 +16,11 @@
 #include "driver/gpio.h"
 #include "sdkconfig.h"
 #include "rc522.c"
+#include "TagsList.h"
 
+#define TAG_ID_LEN 20
 #define TAG_NAME_LEN 20
+char lastReadTag[TAG_ID_LEN];
 
 #define WIFI_SSID		"TP-LINK_FE84"
 #define WIFI_PASSWORD	"71656137"
@@ -28,6 +31,8 @@
 
 #define WIFI_CONNECTED_BIT BIT0
 #define WIFI_FAIL_BIT      BIT1
+
+TagsList* AlunosCadastrados;
 
 static EventGroupHandle_t s_wifi_event_group;
 
@@ -186,6 +191,9 @@ esp_err_t cadastrar_aluno_handler(httpd_req_t *req)
     }
     char aluno_name[TAG_NAME_LEN];
     strncpy(aluno_name, &buf[5], TAG_NAME_LEN);
+
+    tagsListAppend(AlunosCadastrados, "123123123123123", aluno_name);
+    printTagsList(AlunosCadastrados);
 
     httpd_resp_send(req, aluno_name, req->content_len);
     free(req_hdr);
@@ -426,6 +434,7 @@ void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
 
 void app_main(void)
 {
+    AlunosCadastrados = CreateTagsList();
     const rc522_start_args_t rfid = {
         .miso_io  = 25,
         .mosi_io  = 23,
@@ -455,5 +464,6 @@ void app_main(void)
     wifi_init_sta();        
 	setup_server();
 
-    printf("end main\n");
+    uint8_t* sn = {123, 123, 123, 123, 123};
+    tag_handler(sn);
 }

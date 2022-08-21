@@ -67,3 +67,14 @@ void freeTagsList(TagsList *tagsList) {
   tagsList->firstNode = NULL;
   tagsList->len = 0;
 }
+
+int idExits(TagsList *tagsList, const char id[]) {
+  if (tagsList->len > 0) {
+    TagNode *tagNodeP = tagsList->firstNode;
+    while (tagNodeP) {
+      if (strcmp(tagNodeP->id, id) == 0) return 1;
+      tagNodeP = tagNodeP->nextNode;
+    }
+  }
+  return 0;
+}

@@ -1,4 +1,4 @@
-#define TAG_ID_LEN 16
+#define TAG_ID_LEN 20
 #define TAG_NAME_LEN 20
 
 typedef struct TagNode TagNode;
@@ -23,3 +23,5 @@ void printTagsList(TagsList *tagsList);
 int tagsListAppend(TagsList *tagsList, const char id[], const char name[]);
 
 void freeTagsList(TagsList *tagsList);
+
+int idExits(TagsList *tagsList, const char id[]);
