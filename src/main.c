@@ -17,6 +17,8 @@
 #include "sdkconfig.h"
 #include "rc522.c"
 
+#define TAG_NAME_LEN 20
+
 #define WIFI_SSID		"TP-LINK_FE84"
 #define WIFI_PASSWORD	"71656137"
 #define MAXIMUM_RETRY   5
@@ -182,7 +184,10 @@ esp_err_t cadastrar_aluno_handler(httpd_req_t *req)
         /* Set as additional header for response packet */
         httpd_resp_set_hdr(req, "Custom", req_hdr);
     }
-    httpd_resp_send(req, buf, req->content_len);
+    char aluno_name[TAG_NAME_LEN];
+    strncpy(aluno_name, &buf[5], TAG_NAME_LEN);
+
+    httpd_resp_send(req, aluno_name, req->content_len);
     free(req_hdr);
     free(buf);
     return ESP_OK;
