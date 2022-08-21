@@ -37,15 +37,20 @@ int tagsListAppend(TagsList *tagsList, const char id[], const char name[]) {
     newTagNode->nextNode = NULL;
     if (tagsList->len == 0) {
       tagsList->firstNode = newTagNode;
-    } else if (tagsList->len > 0) {
+      tagsList->len = tagsList->len + 1;
+      return 1;
+    } else if (idExits(tagsList, id) == 1) {
+      printf("DUPLICITY ERROR: Could not add new tag cause it already was registred\n");
+      return 0;
+    } else {
       TagNode *tagNodeP = tagsList->firstNode;
       while (tagNodeP->nextNode) {
         tagNodeP = tagNodeP->nextNode;
       }
       tagNodeP->nextNode = newTagNode;
+      tagsList->len = tagsList->len + 1;
+      return 1;
     }
-    tagsList->len = tagsList->len + 1;
-    return 1;
   } else {
     printf("MEMORY ERROR: Could not add new tag due to not enought memory\n");
     return 0;
@@ -73,6 +78,20 @@ int idExits(TagsList *tagsList, const char id[]) {
     TagNode *tagNodeP = tagsList->firstNode;
     while (tagNodeP) {
       if (strcmp(tagNodeP->id, id) == 0) return 1;
+      tagNodeP = tagNodeP->nextNode;
+    }
+  }
+  return 0;
+}
+
+int getNameById(TagsList *tagsList, const char id[], char name[]) {
+  if (tagsList->len > 0) {
+    TagNode *tagNodeP = tagsList->firstNode;
+    while (tagNodeP) {
+      if (strcmp(tagNodeP->id, id) == 0) {
+        strcmp(tagNodeP->name, name);
+        return 1;
+      }
       tagNodeP = tagNodeP->nextNode;
     }
   }

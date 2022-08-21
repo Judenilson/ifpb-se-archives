@@ -32,8 +32,8 @@ char lastReadTag[TAG_ID_LEN];
 #define WIFI_CONNECTED_BIT BIT0
 #define WIFI_FAIL_BIT      BIT1
 
-TagsList* AlunosCadastrados;
-TagsList* AlunosPresentes;
+TagsList* AlunosCadastrados = NULL;
+TagsList* AlunosPresentes = NULL;
 
 static EventGroupHandle_t s_wifi_event_group;
 
@@ -141,7 +141,9 @@ const char cadastro_form[] = "<h1>Cadastro de Aluno</h1><form action='/cadastrar
 
 esp_err_t cadastro_form_handler(httpd_req_t *req)
 {	
+
 	httpd_resp_send(req, cadastro_form, HTTPD_RESP_USE_STRLEN);
+    modo = MODE_READ_TAGS_FOR_REGISTER;
     return ESP_OK;
 }
 
@@ -413,6 +415,12 @@ void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
             if (i != 4) strcat(tag, ".");
         }
 
+        if (modo == MODE_READ_TAGS_FOR_PRESENCE && idExits(AlunosCadastrados, tag)) {
+            char name[TAG_NAME_LEN];
+            getNameById(AlunosCadastrados, tag, name);
+            tagsListAppend(AlunosPresentes, tag, name);
+        }
+
         strcpy(tag, lastReadTag);
         vTaskDelay(10);
         gpio_set_level(RELE_PIN, 1);
@@ -457,5 +465,4 @@ void app_main(void)
     uint8_t sn[5];
     for (int i = 0; i < 5; i++) sn[i] = (uint8_t)(123);
     tag_handler(sn);
-    printf("\n\nend\n\n");
 }

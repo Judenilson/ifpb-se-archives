@@ -25,3 +25,5 @@ int tagsListAppend(TagsList *tagsList, const char id[], const char name[]);
 void freeTagsList(TagsList *tagsList);
 
 int idExits(TagsList *tagsList, const char id[]);
+
+int getNameById(TagsList *tagsList, const char id[], char name[]);
