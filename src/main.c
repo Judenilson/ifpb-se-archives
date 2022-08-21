@@ -192,8 +192,7 @@ esp_err_t cadastrar_aluno_handler(httpd_req_t *req)
     char aluno_name[TAG_NAME_LEN];
     strncpy(aluno_name, &buf[5], TAG_NAME_LEN);
 
-    tagsListAppend(AlunosCadastrados, "123123123123123", aluno_name);
-    printTagsList(AlunosCadastrados);
+    tagsListAppend(AlunosCadastrados, lastReadTag, aluno_name);
 
     httpd_resp_send(req, aluno_name, req->content_len);
     free(req_hdr);
