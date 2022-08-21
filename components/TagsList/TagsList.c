@@ -1,6 +1,7 @@
 #include "TagsList.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 TagsList *CreateTagsList() {
   TagsList *newTagsList = (TagsList *)malloc(sizeof(TagsList));

@@ -127,6 +127,7 @@
                 "/home/lads/.platformio/packages/framework-espidf/components/spiffs/include",
                 "/home/lads/.platformio/packages/framework-espidf/components/ulp/include",
                 "/home/lads/.platformio/packages/framework-espidf/components/wifi_provisioning/include",
+                "/home/lads/Antonio/sistemas-embarcados/projeto-se/projeto_se/components/TagsList",
                 "/home/lads/Antonio/sistemas-embarcados/projeto-se/projeto_se/components/rc522",
                 ""
             ],
@@ -252,6 +253,7 @@
                     "/home/lads/.platformio/packages/framework-espidf/components/spiffs/include",
                     "/home/lads/.platformio/packages/framework-espidf/components/ulp/include",
                     "/home/lads/.platformio/packages/framework-espidf/components/wifi_provisioning/include",
+                    "/home/lads/Antonio/sistemas-embarcados/projeto-se/projeto_se/components/TagsList",
                     "/home/lads/Antonio/sistemas-embarcados/projeto-se/projeto_se/components/rc522",
                     ""
                 ]
