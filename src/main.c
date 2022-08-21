@@ -33,6 +33,7 @@ char lastReadTag[TAG_ID_LEN];
 #define WIFI_FAIL_BIT      BIT1
 
 TagsList* AlunosCadastrados;
+TagsList* AlunosPresentes;
 
 static EventGroupHandle_t s_wifi_event_group;
 
@@ -41,11 +42,15 @@ static const char* TAGM = "MainAPP";
 static uint8_t light_state = 0; // off
 static int s_retry_num = 0;
 
+#define MODE_DONT_READ_TAGS 0
+#define MODE_READ_TAGS_FOR_PRESENCE 1
+#define MODE_READ_TAGS_FOR_REGISTER 2
 char lista[2000] = "";
 char lista_nomes[2000] = "";
 int indexLista = 0;
-int modo = 0;
+int modo = MODE_DONT_READ_TAGS;
 const char separador[2] = {'!'};
+
 
 static void event_handler(void* arg, esp_event_base_t event_base,
                                 int32_t event_id, void* event_data)
@@ -219,7 +224,7 @@ esp_err_t lista_handler(httpd_req_t *req)
 
 esp_err_t telegram_handler(httpd_req_t *req)
 {	
-    modo = 1; //modo que habilita salvar as tags.
+    modo = MODE_READ_TAGS_FOR_PRESENCE; //modo que habilita salvar as tags.
 	httpd_resp_send(req, telegram_resp, HTTPD_RESP_USE_STRLEN);
     return ESP_OK;
 }
@@ -230,7 +235,7 @@ esp_err_t aulafim_handler(httpd_req_t *req)
     char lista_nomes_Empty[2000] = "";
     strcpy(lista, lista_Empty);
     strcpy(lista_nomes, lista_nomes_Empty);
-    modo = 0;  //modo que desabilita salvar as tags.
+    modo = MODE_DONT_READ_TAGS;  // modo que desabilita salvar as tags.
 
 	httpd_resp_send(req, aulafim_telegram_resp, HTTPD_RESP_USE_STRLEN);
     return ESP_OK;
@@ -397,43 +402,29 @@ int existeTagLista (char tag[]){
 }
 
 void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
-    char tag[25] = "";    
-    char nome[35] = "Judenilson";
+    if (modo != MODE_DONT_READ_TAGS) {
+        char tag[TAG_ID_LEN] = "";
 
-    for (int i = 0; i < 5; i++){
-        int num = sn[i];
-        char snum[5], ponto[2] = {'.'};
-        snprintf(snum, 5, "%d", num);        
-        strcat(tag, snum);
-        if (i != 4){
-            strcat(tag, ponto);
-        }else{
-            strcat(tag, separador);
+        for (int i = 0; i < 5; i++) {
+            int num = sn[i];
+            char snum[4];
+            snprintf(snum, 4, "%d", num);        
+            strcat(tag, snum);
+            if (i != 4) strcat(tag, ".");
         }
-    }
-    
-    if ((existeTagLista(tag) == -1) && (modo == 1)){
-        adicionarLista(tag, nome, indexLista);
-    }
-    
-    for (int i = 0; i < 200; i++){ //usado 200 pra ficar fácil de observar no console. Pra enxergar o array completo tem q ser 2000.
-        printf("%c", lista[i]);
-        if ((i % 60 == 0) && (i > 0)){
-            printf("\n");        
-        }
-    } 
-    printf("\n");
 
-    vTaskDelay(10);
-
-    gpio_set_level(RELE_PIN, 1);
-    vTaskDelay(100);
-    gpio_set_level(RELE_PIN, 0);
+        strcpy(tag, lastReadTag);
+        vTaskDelay(10);
+        gpio_set_level(RELE_PIN, 1);
+        vTaskDelay(100);
+        gpio_set_level(RELE_PIN, 0);
+    }
 }
 
 void app_main(void)
 {
     AlunosCadastrados = CreateTagsList();
+    AlunosPresentes = CreateTagsList();
     const rc522_start_args_t rfid = {
         .miso_io  = 25,
         .mosi_io  = 23,
@@ -463,6 +454,8 @@ void app_main(void)
     wifi_init_sta();        
 	setup_server();
 
-    uint8_t* sn = {123, 123, 123, 123, 123};
+    uint8_t sn[5];
+    for (int i = 0; i < 5; i++) sn[i] = (uint8_t)(123);
     tag_handler(sn);
+    printf("\n\nend\n\n");
 }
