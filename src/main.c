@@ -17,8 +17,8 @@
 #include "sdkconfig.h"
 #include "rc522.c"
 
-#define WIFI_SSID		"Judenilson"
-#define WIFI_PASSWORD	"Judenilson82"
+#define WIFI_SSID		"TP-LINK_FE84"
+#define WIFI_PASSWORD	"71656137"
 #define MAXIMUM_RETRY   5
 
 #define LIGHT_PIN   GPIO_NUM_32
