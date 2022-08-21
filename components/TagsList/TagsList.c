@@ -5,7 +5,6 @@
 
 TagsList *CreateTagsList() {
   TagsList *newTagsList = (TagsList *)malloc(sizeof(TagsList));
-  printf("Created tags List\n");
   return newTagsList;
 }
 
@@ -53,8 +52,6 @@ int tagsListAppend(TagsList *tagsList, const char id[], const char name[]) {
 
 void freeTagsList(TagsList *tagsList) {
   if (tagsList->len == 1) {
-    printf("\nliberando alloc da tag:\n");
-    printTagNode(tagsList->firstNode);
     free(tagsList->firstNode);
   } else if (tagsList->len > 1) {
     TagNode *tagNodeP = tagsList->firstNode;
@@ -62,8 +59,6 @@ void freeTagsList(TagsList *tagsList) {
     while (tagNodeP) {
       tmpTagNodeP = tagNodeP;
       tagNodeP = tagNodeP->nextNode;
-      printf("\nliberando alloc da tag:\n");
-      printTagNode(tmpTagNodeP);
       free(tmpTagNodeP);
     }
   }
