@@ -27,3 +27,7 @@ void freeTagsList(TagsList *tagsList);
 int idExits(TagsList *tagsList, const char id[]);
 
 int getNameById(TagsList *tagsList, const char id[], char name[]);
+
+void getNamesHtml(TagsList *tagsList, char htmlList[]);
+
+void getTagsHtml(TagsList *tagsList, char htmlList[]);

@@ -215,8 +215,9 @@ esp_err_t get_handler(httpd_req_t *req)
 
 esp_err_t lista_handler(httpd_req_t *req)
 {	
-    char resposta[3000]="<h3>Alunos Presentes</h3>";
-    char botao[45] = "<br><a href=\"/\"><button>VOLTAR</button></a>";
+    char resposta[25 + (9 + ((9 + 20) * 5) + 1)] = "<h3>Alunos Presentes</h3>";
+    char botao[43 + 1] = "<br><a href=\"/\"><button>VOLTAR</button></a>";
+    getNamesHtml(AlunosPresentes, resposta);
     strcat(resposta, lista_nomes);
     strcat(resposta, botao);
     

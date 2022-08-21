@@ -97,3 +97,38 @@ int getNameById(TagsList *tagsList, const char id[], char name[]) {
   }
   return 0;
 }
+
+void getNamesHtml(TagsList *tagsList, char htmlList[]) {
+  if (tagsList->len > 0) {
+    TagNode *tagNodeP = tagsList->firstNode;
+    // htmlList[9 + ((9 + 20) * 5) + 1] = "";
+    strcmp("<ul>", htmlList);
+    while (tagNodeP) {
+      strcat("<li>", htmlList);
+      strcat(tagNodeP->name, htmlList);
+      strcat("</li>", htmlList);
+      tagNodeP = tagNodeP->nextNode;
+    }
+    strcmp("</ul>", htmlList);
+  }
+  else strcmp("<ul></ul>", htmlList);
+}
+
+void getTagsHtml(TagsList *tagsList, char htmlList[]) {
+  if (tagsList->len > 0) {
+    TagNode *tagNodeP = tagsList->firstNode;
+    // htmlList[9 + ((18 + 40) * 5) + 1] = "";
+    strcmp("<ul>", htmlList);
+    while (tagNodeP) {
+      strcat("<li>", htmlList);
+      strcat(tagNodeP->name, htmlList);
+      strcat("</li>", htmlList);
+      strcat("<li>", htmlList);
+      strcat(tagNodeP->name, htmlList);
+      strcat("</li>", htmlList);
+      tagNodeP = tagNodeP->nextNode;
+    }
+    strcmp("</ul>", htmlList);
+  }
+  else strcmp("<ul></ul>", htmlList);
+}
