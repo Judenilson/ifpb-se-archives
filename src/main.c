@@ -406,6 +406,7 @@ int existeTagLista (char tag[]){
 void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
     if (modo != MODE_DONT_READ_TAGS) {
         char tag[TAG_ID_LEN] = "";
+        strcpy(tag, lastReadTag);
 
         for (int i = 0; i < 5; i++) {
             int num = sn[i];
@@ -419,13 +420,12 @@ void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
             char name[TAG_NAME_LEN];
             getNameById(AlunosCadastrados, tag, name);
             tagsListAppend(AlunosPresentes, tag, name);
-        }
 
-        strcpy(tag, lastReadTag);
-        vTaskDelay(10);
-        gpio_set_level(RELE_PIN, 1);
-        vTaskDelay(100);
-        gpio_set_level(RELE_PIN, 0);
+            vTaskDelay(10);
+            gpio_set_level(RELE_PIN, 1);
+            vTaskDelay(100);
+            gpio_set_level(RELE_PIN, 0);
+        }
     }
 }
 
