@@ -120,11 +120,73 @@ void wifi_init_sta(void)
     }
 }
 
-const char menu_resp[] = "<h3>Controle de Presen&ccedila</h3><button><a href=\"/light\">Luzes</a></button><br><button><a href=\"/lista\">Lista de Presen&ccedila</a></button><br><br><br><button><a href=\"/telegram\">Iniciar Aula</button></a><a href=\"/aulafim\"><button>Encerrar Aula</button></a>";
+const char menu_resp[] = "<h3>Controle de Presen&ccedila</h3><button><a href=\"/light\">Luzes</a></button><br><button><a href=\"/lista\">Lista de Presen&ccedila</a></button><br><br><br><button><a href=\"/telegram\">Iniciar Aula</button></a><a href=\"/aulafim\"><button>Encerrar Aula</button></a><br><button><a href=\"/cadastro\">Cadastrar Aluno</a></button>";
 const char on_resp[] = "<h3>LUZES da Sala: ACESAS</h3><a href=\"/off\"><button>DESLIGAR</button></a><a href=\"/\"><button>VOLTAR</button></a>";
 const char off_resp[] = "<h3>LUZES da Sala: APAGADAS</h3><a href=\"/on\"><button>LIGAR</button></a><a href=\"/\"><button>VOLTAR</button></a>";
 const char telegram_resp[] = "<object width='0' height='0' type='text/html' data='https://api.telegram.org/bot5775630816:AAEuxojQRdMLpiVQINcnt0_iMWv87YQjsaM/sendMessage?chat_id=-708112312&text=AULA_INICIADA!!!'></object>Mensagem de in&iacutecio de aula enviada para o Telegram!<br><br><a href=\"/\"><button>VOLTAR</button></a>";
 const char aulafim_telegram_resp[] = "<object width='0' height='0' type='text/html' data='https://api.telegram.org/bot5775630816:AAEuxojQRdMLpiVQINcnt0_iMWv87YQjsaM/sendMessage?chat_id=-708112312&text=AULA_ENCERRADA!!!'></object>Mensagem de aula encerrada enviada para o Telegram!<br><br><a href=\"/\"><button>VOLTAR</button></a>";
+const char cadastro_form[] = "<h1>Cadastro de Aluno</h1><form action='/cadastrar' method='post'><input type='text' id='name' name='name' placeholder='nome do aluno' maxlength='19'><input type='submit' value='Cadastrar'></form>";
+
+esp_err_t cadastro_form_handler(httpd_req_t *req)
+{	
+	httpd_resp_send(req, cadastro_form, HTTPD_RESP_USE_STRLEN);
+    return ESP_OK;
+}
+
+esp_err_t cadastrar_aluno_handler(httpd_req_t *req)
+{
+    ESP_LOGI(TAG, "/echo handler read content length %d", req->content_len);
+
+    char*  buf = malloc(req->content_len + 1);
+    size_t off = 0;
+    int    ret;
+
+    if (!buf) {
+        ESP_LOGE(TAG, "Failed to allocate memory of %d bytes!", req->content_len + 1);
+        httpd_resp_send_500(req);
+        return ESP_FAIL;
+    }
+
+    while (off < req->content_len) {
+        /* Read data received in the request */
+        ret = httpd_req_recv(req, buf + off, req->content_len - off);
+        if (ret <= 0) {
+            if (ret == HTTPD_SOCK_ERR_TIMEOUT) {
+                httpd_resp_send_408(req);
+            }
+            free (buf);
+            return ESP_FAIL;
+        }
+        off += ret;
+        ESP_LOGI(TAG, "/echo handler recv length %d", ret);
+    }
+    buf[off] = '\0';
+
+    if (req->content_len < 128) {
+        ESP_LOGI(TAG, "/echo handler read %s", buf);
+    }
+
+    /* Search for Custom header field */
+    char*  req_hdr = 0;
+    size_t hdr_len = httpd_req_get_hdr_value_len(req, "Custom");
+    if (hdr_len) {
+        /* Read Custom header value */
+        req_hdr = malloc(hdr_len + 1);
+        if (!req_hdr) {
+            ESP_LOGE(TAG, "Failed to allocate memory of %d bytes!", hdr_len + 1);
+            httpd_resp_send_500(req);
+            return ESP_FAIL;
+        }
+        httpd_req_get_hdr_value_str(req, "Custom", req_hdr, hdr_len + 1);
+
+        /* Set as additional header for response packet */
+        httpd_resp_set_hdr(req, "Custom", req_hdr);
+    }
+    httpd_resp_send(req, buf, req->content_len);
+    free (req_hdr);
+    free (buf);
+    return ESP_OK;
+}
 
 esp_err_t get_handler(httpd_req_t *req)
 {	
@@ -195,6 +257,20 @@ httpd_uri_t uri_get = {
     .user_ctx = NULL
 };
 
+httpd_uri_t uri_cadastro = {
+    .uri      = "/cadastro",
+    .method   = HTTP_GET,
+    .handler  = cadastro_form_handler,
+    .user_ctx = NULL
+};
+
+httpd_uri_t uri_cadastrar = {
+    .uri      = "/cadastrar",
+    .method   = HTTP_POST,
+    .handler  = cadastro_form_handler,
+    .user_ctx = NULL
+};
+
 httpd_uri_t uri_lista = {
     .uri      = "/lista",
     .method   = HTTP_GET,
@@ -252,6 +328,8 @@ httpd_handle_t setup_server(void)
 		httpd_register_uri_handler(server, &uri_lista);
 		httpd_register_uri_handler(server, &uri_telegram);
 		httpd_register_uri_handler(server, &uri_aulafim);
+        httpd_register_uri_handler(server, &uri_cadastro);
+        httpd_register_uri_handler(server, &uri_cadastrar);
     }
 
     return server;
@@ -341,7 +419,8 @@ void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
 }
 
 void app_main(void)
-{        
+{
+        
     const rc522_start_args_t rfid = {
         .miso_io  = 25,
         .mosi_io  = 23,
@@ -370,4 +449,6 @@ void app_main(void)
     ESP_LOGI(TAGM, "ESP_WIFI_MODE_STA");
     wifi_init_sta();        
 	setup_server();
+
+    printf("end main\n");
 }
