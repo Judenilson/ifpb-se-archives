@@ -322,8 +322,8 @@ httpd_handle_t setup_server(void)
 
     if (httpd_start(&server, &config) == ESP_OK) {
         httpd_register_uri_handler(server, &uri_get);
-		httpd_register_uri_handler(server, &uri_on);
-		httpd_register_uri_handler(server, &uri_off);
+		// httpd_register_uri_handler(server, &uri_on);
+		// httpd_register_uri_handler(server, &uri_off);
 		httpd_register_uri_handler(server, &uri_light);
 		httpd_register_uri_handler(server, &uri_lista);
 		httpd_register_uri_handler(server, &uri_telegram);
