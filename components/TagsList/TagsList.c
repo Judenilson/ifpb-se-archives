@@ -101,7 +101,7 @@ int getNameById(TagsList *tagsList, const char id[], char name[]) {
 void getNamesHtml(TagsList *tagsList, char htmlList[]) {
   if (tagsList->len > 0) {
     TagNode *tagNodeP = tagsList->firstNode;
-    // htmlList[9 + ((9 + 20) * 5) + 1] = "";
+    // htmlList[9 + ((9 + TAG_NAME_LEN) * 5) + 1] = "";
     strcat(htmlList, "<ul>");
     while (tagNodeP) {
       strcat(htmlList, "<li>");
@@ -117,7 +117,7 @@ void getNamesHtml(TagsList *tagsList, char htmlList[]) {
 void getTagsHtml(TagsList *tagsList, char htmlList[]) {
   if (tagsList->len > 0) {
     TagNode *tagNodeP = tagsList->firstNode;
-    // htmlList[9 + ((18 + 40) * 5) + 1] = "";
+    // htmlList[9 + ((18 + TAG_NAME_LEN + TAG_ID_LEN) * 5) + 1] = "";
     strcat(htmlList, "<ul>");
     while (tagNodeP) {
       strcat(htmlList, "<li>");
