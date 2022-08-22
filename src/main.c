@@ -21,8 +21,8 @@
 #define MAX_TAGS 5
 #define TAG_ID_LEN 16
 #define TAG_NAME_LEN 50
-#define SEM_TAG "sem tag"
-char lastReadTag[TAG_ID_LEN] = SEM_TAG;
+#define NO_TAG "nenhuma tag"
+char lastReadTag[TAG_ID_LEN] = NO_TAG;
 #define LEN_BOTOES_CADASTRAR_RESPONSE 126
 
 #define WIFI_SSID		"TP-LINK_FE84"
@@ -136,11 +136,12 @@ const char on_resp[] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></hea
 const char off_resp[] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body><h3>LUZES da Sala: APAGADAS</h3><a href=\"/on\"><button>LIGAR</button></a><a href=\"/\"><button>VOLTAR</button></a></body></html>";
 const char telegram_resp[] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body><object width='0' height='0' type='text/html' data='https://api.telegram.org/bot5775630816:AAEuxojQRdMLpiVQINcnt0_iMWv87YQjsaM/sendMessage?chat_id=-708112312&text=AULA_INICIADA!!!'></object>Mensagem de início de aula enviada para o Telegram!<br><br><a href=\"/\"><button>VOLTAR</button></a></body></html>";
 const char aulafim_telegram_resp[] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body><object width='0' height='0' type='text/html' data='https://api.telegram.org/bot5775630816:AAEuxojQRdMLpiVQINcnt0_iMWv87YQjsaM/sendMessage?chat_id=-708112312&text=AULA_ENCERRADA!!!'></object>Mensagem de aula encerrada enviada para o Telegram!<br><br><a href=\"/\"><button>VOLTAR</button></a></body></html>";
-const char cadastro_form[] = "<h1>Cadastro de Aluno</h1><form action='/cadastrar' method='post'><input type='text' id='name' name='name' placeholder='nome do aluno' maxlength='49'><input type='submit' value='Cadastrar'></form><br><br><a href=\"/\"><button>VOLTAR</button></a>";
 
 esp_err_t cadastro_form_handler(httpd_req_t *req)
 {	
-
+    char cadastro_form[270 + TAG_ID_LEN + 1] = "<h1>Cadastro de Aluno</h1><h5>última tag lida: ";
+    strcat(cadastro_form, lastReadTag);
+    strcat(cadastro_form, " </h5><form action='/cadastrar' method='post'><input type='text' id='name' name='name' placeholder='nome do aluno' maxlength='49'><input type='submit' value='Cadastrar'></form><br><br><a href=\"/\"><button>VOLTAR</button></a>");
 	httpd_resp_send(req, cadastro_form, HTTPD_RESP_USE_STRLEN);
     modo = MODE_READ_TAGS_FOR_REGISTER;
     return ESP_OK;
@@ -200,7 +201,7 @@ esp_err_t cadastrar_aluno_handler(httpd_req_t *req)
 
     const char botoes[] = "<br><br><a href=\"/cadastro\"><button>TELA DE CADASTRO</button></a><a href=\"/cadastros\"><button>ALUNOS CADASTRADOS</button></a>";
     // cadastro vai funcionar
-    if (strcmp(aluno_name, "") != 0 && strcmp(lastReadTag, SEM_TAG) != 0 && idExits(AlunosCadastrados, lastReadTag) == 0) {
+    if (strcmp(aluno_name, "") != 0 && strcmp(lastReadTag, NO_TAG) != 0 && idExits(AlunosCadastrados, lastReadTag) == 0) {
         tagsListAppend(AlunosCadastrados, lastReadTag, aluno_name);
         char response[TAG_ID_LEN + TAG_NAME_LEN  + LEN_BOTOES_CADASTRAR_RESPONSE + 28 + 1] = "Aluno ";
         strcat(response, aluno_name); 
@@ -216,7 +217,7 @@ esp_err_t cadastrar_aluno_handler(httpd_req_t *req)
             strcat(response, botoes);
             httpd_resp_send(req, response, strlen(response));
         }
-        else if (strcmp(lastReadTag, SEM_TAG) == 0) { // não colocou tag
+        else if (strcmp(lastReadTag, NO_TAG) == 0) { // não colocou tag
             char response[LEN_BOTOES_CADASTRAR_RESPONSE + 145 + 1] = "Não foi possível realizar o cadastro, a tag não foi lida, passe uma tag no leitor e clique no botão TELA DE CADASTRO abaixo para tentar novamente";
             strcat(response, botoes);
             httpd_resp_send(req, response, strlen(response));
