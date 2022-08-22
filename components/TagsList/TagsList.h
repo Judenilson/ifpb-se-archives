@@ -14,7 +14,7 @@ struct TagsList {
   TagNode *firstNode;
 };
 
-TagsList *CreateTagsList();
+TagsList* CreateTagsList();
 
 void printTagNode(TagNode *tagNode);
 
