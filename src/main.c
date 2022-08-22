@@ -236,8 +236,8 @@ esp_err_t aulafim_handler(httpd_req_t *req)
 {	
     char lista_Empty[2000] = "";
     char lista_nomes_Empty[2000] = "";
-    strcpy(lista, lista_Empty);
-    strcpy(lista_nomes, lista_nomes_Empty);
+    strcpy(lista_Empty, lista);
+    strcpy(lista_nomes_Empty, lista_nomes);
     modo = MODE_DONT_READ_TAGS;  // modo que desabilita salvar as tags.
 
 	httpd_resp_send(req, aulafim_telegram_resp, HTTPD_RESP_USE_STRLEN);
@@ -416,7 +416,7 @@ void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
             if (i != 4) strcat(tag, ".");
         }
 
-        strcpy(tag, lastReadTag);
+        strcpy(lastReadTag, tag);
 
         if (modo == MODE_READ_TAGS_FOR_PRESENCE && idExits(AlunosCadastrados, tag)) {
             char name[TAG_NAME_LEN];
