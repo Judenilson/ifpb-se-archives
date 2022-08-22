@@ -18,8 +18,8 @@
 #include "rc522.c"
 #include "TagsList.h"
 
-#define TAG_ID_LEN 20
-#define TAG_NAME_LEN 20
+#define TAG_ID_LEN 16
+#define TAG_NAME_LEN 50
 char lastReadTag[TAG_ID_LEN];
 
 #define WIFI_SSID		"TP-LINK_FE84"

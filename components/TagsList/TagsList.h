@@ -1,5 +1,5 @@
-#define TAG_ID_LEN 20
-#define TAG_NAME_LEN 20
+#define TAG_ID_LEN 16
+#define TAG_NAME_LEN 50
 
 typedef struct TagNode TagNode;
 struct TagNode {
