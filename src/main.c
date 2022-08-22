@@ -351,7 +351,7 @@ httpd_uri_t uri_off = {
 httpd_handle_t setup_server(void)
 {
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-    config.max_uri_handlers = 9;
+    config.max_uri_handlers = 10;
     httpd_handle_t server = NULL;
     config.stack_size = 20480;
 
