@@ -102,33 +102,33 @@ void getNamesHtml(TagsList *tagsList, char htmlList[]) {
   if (tagsList->len > 0) {
     TagNode *tagNodeP = tagsList->firstNode;
     // htmlList[9 + ((9 + 20) * 5) + 1] = "";
-    strcat("<ul>", htmlList);
+    strcat(htmlList, "<ul>");
     while (tagNodeP) {
-      strcat("<li>", htmlList);
+      strcat(htmlList, "<li>");
       strcat(tagNodeP->name, htmlList);
-      strcat("</li>", htmlList);
+      strcat(htmlList, "</li>");
       tagNodeP = tagNodeP->nextNode;
     }
-    strcat("</ul>", htmlList);
+    strcat(htmlList, "</ul>");
   }
-  else strcat("<ul></ul>", htmlList);
+  else strcat(htmlList, "<ul></ul>");
 }
 
 void getTagsHtml(TagsList *tagsList, char htmlList[]) {
   if (tagsList->len > 0) {
     TagNode *tagNodeP = tagsList->firstNode;
     // htmlList[9 + ((18 + 40) * 5) + 1] = "";
-    strcat("<ul>", htmlList);
+    strcat(htmlList, "<ul>");
     while (tagNodeP) {
-      strcat("<li>", htmlList);
+      strcat(htmlList, "<li>");
       strcat(tagNodeP->name, htmlList);
-      strcat("</li>", htmlList);
-      strcat("<li>", htmlList);
+      strcat(htmlList, "</li>");
+      strcat(htmlList, "<li>");
       strcat(tagNodeP->name, htmlList);
-      strcat("</li>", htmlList);
+      strcat(htmlList, "</li>");
       tagNodeP = tagNodeP->nextNode;
     }
-    strcat("</ul>", htmlList);
+    strcat(htmlList, "</ul>");
   }
-  else strcat("<ul></ul>", htmlList);
+  else strcat(htmlList, "<ul></ul>");
 }
