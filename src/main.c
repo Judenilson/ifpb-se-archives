@@ -407,7 +407,6 @@ int existeTagLista (char tag[]){
 void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
     if (modo != MODE_DONT_READ_TAGS) {
         char tag[TAG_ID_LEN] = "";
-        strcpy(tag, lastReadTag);
 
         for (int i = 0; i < 5; i++) {
             int num = sn[i];
@@ -416,6 +415,8 @@ void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
             strcat(tag, snum);
             if (i != 4) strcat(tag, ".");
         }
+
+        strcpy(tag, lastReadTag);
 
         if (modo == MODE_READ_TAGS_FOR_PRESENCE && idExits(AlunosCadastrados, tag)) {
             char name[TAG_NAME_LEN];
