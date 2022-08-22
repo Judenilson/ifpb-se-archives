@@ -130,7 +130,7 @@ void wifi_init_sta(void)
     }
 }
 
-const char menu_resp[] = "<h3>Controle de Presen&ccedila</h3><button><a href=\"/light\">Luzes</a></button><br><button><a href=\"/lista\">Lista de Presen&ccedila</a></button><br><br><br><button><a href=\"/telegram\">Iniciar Aula</button></a><a href=\"/aulafim\"><button>Encerrar Aula</button></a><br><button><a href=\"/cadastro\">Cadastrar Aluno</a></button>";
+const char menu_resp[] = "<h3>Controle de Presen&ccedila</h3><button><a href=\"/light\">Luzes</a></button><br><button><a href=\"/lista\">Lista de Presen&ccedila</a></button><button><a href=\"/cadastros\">Lista de Cadastros</a></button><br><br><br><button><a href=\"/telegram\">Iniciar Aula</button></a><a href=\"/aulafim\"><button>Encerrar Aula</button></a><br><button><a href=\"/cadastro\">Cadastrar Aluno</a></button>";
 const char on_resp[] = "<h3>LUZES da Sala: ACESAS</h3><a href=\"/off\"><button>DESLIGAR</button></a><a href=\"/\"><button>VOLTAR</button></a>";
 const char off_resp[] = "<h3>LUZES da Sala: APAGADAS</h3><a href=\"/on\"><button>LIGAR</button></a><a href=\"/\"><button>VOLTAR</button></a>";
 const char telegram_resp[] = "<object width='0' height='0' type='text/html' data='https://api.telegram.org/bot5775630816:AAEuxojQRdMLpiVQINcnt0_iMWv87YQjsaM/sendMessage?chat_id=-708112312&text=AULA_INICIADA!!!'></object>Mensagem de in&iacutecio de aula enviada para o Telegram!<br><br><a href=\"/\"><button>VOLTAR</button></a>";
@@ -222,6 +222,17 @@ esp_err_t lista_handler(httpd_req_t *req)
     return ESP_OK;
 }
 
+esp_err_t cadastros(httpd_req_t *req)
+{	
+    char resposta[25 + (9 + ((9 + TAG_NAME_LEN) * 5) + 1)] = "<h3>Alunos Cadastrados</h3>";
+    char botao[43 + 1] = "<br><a href=\"/\"><button>VOLTAR</button></a>";
+    getTagsHtml(AlunosPresentes, resposta);
+    strcat(resposta, botao);
+    
+	httpd_resp_send(req, resposta, HTTPD_RESP_USE_STRLEN);
+    return ESP_OK;
+}
+
 esp_err_t telegram_handler(httpd_req_t *req)
 {	
     modo = MODE_READ_TAGS_FOR_PRESENCE; //modo que habilita salvar as tags.
@@ -277,6 +288,13 @@ httpd_uri_t uri_cadastro = {
     .uri      = "/cadastro",
     .method   = HTTP_GET,
     .handler  = cadastro_form_handler,
+    .user_ctx = NULL
+};
+
+httpd_uri_t uri_cadastros = {
+    .uri      = "/cadastros",
+    .method   = HTTP_GET,
+    .handler  = cadastros,
     .user_ctx = NULL
 };
 
@@ -347,6 +365,7 @@ httpd_handle_t setup_server(void)
 		httpd_register_uri_handler(server, &uri_aulafim);
         httpd_register_uri_handler(server, &uri_cadastro);
         httpd_register_uri_handler(server, &uri_cadastrar);
+        httpd_register_uri_handler(server, &uri_cadastros);
     }
 
     return server;
