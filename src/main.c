@@ -236,8 +236,8 @@ esp_err_t aulafim_handler(httpd_req_t *req)
 {	
     char lista_Empty[2000] = "";
     char lista_nomes_Empty[2000] = "";
-    strcpy(lista_Empty, lista);
-    strcpy(lista_nomes_Empty, lista_nomes);
+    strcpy(lista, lista_Empty);
+    strcpy(lista_nomes, lista_nomes_Empty);
     modo = MODE_DONT_READ_TAGS;  // modo que desabilita salvar as tags.
 
 	httpd_resp_send(req, aulafim_telegram_resp, HTTPD_RESP_USE_STRLEN);
