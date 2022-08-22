@@ -136,7 +136,7 @@ const char on_resp[] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></hea
 const char off_resp[] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body><h3>LUZES da Sala: APAGADAS</h3><a href=\"/on\"><button>LIGAR</button></a><a href=\"/\"><button>VOLTAR</button></a></body></html>";
 const char telegram_resp[] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body><object width='0' height='0' type='text/html' data='https://api.telegram.org/bot5775630816:AAEuxojQRdMLpiVQINcnt0_iMWv87YQjsaM/sendMessage?chat_id=-708112312&text=AULA_INICIADA!!!'></object>Mensagem de início de aula enviada para o Telegram!<br><br><a href=\"/\"><button>VOLTAR</button></a></body></html>";
 const char aulafim_telegram_resp[] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body><object width='0' height='0' type='text/html' data='https://api.telegram.org/bot5775630816:AAEuxojQRdMLpiVQINcnt0_iMWv87YQjsaM/sendMessage?chat_id=-708112312&text=AULA_ENCERRADA!!!'></object>Mensagem de aula encerrada enviada para o Telegram!<br><br><a href=\"/\"><button>VOLTAR</button></a></body></html>";
-const char cadastro_form[] = "<h1>Cadastro de Aluno</h1><form action='/cadastrar' method='post'><input type='text' id='name' name='name' placeholder='nome do aluno' maxlength='49'><input type='submit' value='Cadastrar'></form>";
+const char cadastro_form[] = "<h1>Cadastro de Aluno</h1><form action='/cadastrar' method='post'><input type='text' id='name' name='name' placeholder='nome do aluno' maxlength='49'><input type='submit' value='Cadastrar'></form><br><br><a href=\"/\"><button>VOLTAR</button></a>";
 
 esp_err_t cadastro_form_handler(httpd_req_t *req)
 {	
