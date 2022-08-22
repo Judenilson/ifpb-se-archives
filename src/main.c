@@ -239,6 +239,9 @@ esp_err_t aulafim_handler(httpd_req_t *req)
     strcpy(lista, lista_Empty);
     strcpy(lista_nomes, lista_nomes_Empty);
     modo = MODE_DONT_READ_TAGS;  // modo que desabilita salvar as tags.
+    
+    freeTagsList(AlunosPresentes);
+    printTagsList(AlunosPresentes);
 
 	httpd_resp_send(req, aulafim_telegram_resp, HTTPD_RESP_USE_STRLEN);
     return ESP_OK;
