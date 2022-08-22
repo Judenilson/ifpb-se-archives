@@ -46,9 +46,7 @@ static int s_retry_num = 0;
 #define MODE_DONT_READ_TAGS 0
 #define MODE_READ_TAGS_FOR_PRESENCE 1
 #define MODE_READ_TAGS_FOR_REGISTER 2
-int indexLista = 0;
 int modo = MODE_DONT_READ_TAGS;
-const char separador[2] = {'!'};
 
 
 static void event_handler(void* arg, esp_event_base_t event_base,
