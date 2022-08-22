@@ -32,8 +32,8 @@ void printTagsList(TagsList *tagsList) {
 int tagsListAppend(TagsList *tagsList, const char id[], const char name[]) {
   TagNode *newTagNode = (TagNode *)malloc(sizeof(TagNode));
   if (newTagNode) {
-    strcpy(id, newTagNode->id);
-    strcpy(name, newTagNode->name);
+    strcpy(newTagNode->id, id);
+    strcpy(newTagNode->name, name);
     newTagNode->nextNode = NULL;
     if (tagsList->len == 0) {
       tagsList->firstNode = newTagNode;
