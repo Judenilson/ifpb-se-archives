@@ -18,6 +18,7 @@
 #include "rc522.c"
 #include "TagsList.h"
 
+#define MAX_TAGS 5
 #define TAG_ID_LEN 16
 #define TAG_NAME_LEN 50
 #define SEM_TAG "sem tag"
@@ -214,7 +215,7 @@ esp_err_t get_handler(httpd_req_t *req)
 
 esp_err_t lista_handler(httpd_req_t *req)
 {	
-    char resposta[25 + (9 + ((9 + TAG_NAME_LEN) * 5) + 1) + 43 + 1] = "<h3>Alunos Presentes</h3>";
+    char resposta[25 + (9 + ((9 + TAG_NAME_LEN) * MAX_TAGS) + 1) + 43 + 1] = "<h3>Alunos Presentes</h3>";
     char botao[43 + 1] = "<br><a href=\"/\"><button>VOLTAR</button></a>";
     getNamesHtml(AlunosPresentes, resposta);
     strcat(resposta, botao);
@@ -225,7 +226,7 @@ esp_err_t lista_handler(httpd_req_t *req)
 
 esp_err_t cadastros(httpd_req_t *req)
 {	
-    char resposta[9 + ((18 + TAG_NAME_LEN + TAG_ID_LEN) * 5) + 1 + 43 + 1] = "<h3>Alunos Cadastrados</h3>";
+    char resposta[9 + ((18 + TAG_NAME_LEN + TAG_ID_LEN) * MAX_TAGS) + 1 + 43 + 1] = "<h3>Alunos Cadastrados</h3>";
     char botao[43 + 1] = "<br><a href=\"/\"><button>VOLTAR</button></a>";
     getTagsHtml(AlunosCadastrados, resposta);
     strcat(resposta, botao);
