@@ -412,8 +412,4 @@ void app_main(void)
     ESP_LOGI(TAGM, "ESP_WIFI_MODE_STA");
     wifi_init_sta();        
 	setup_server();
-
-    uint8_t sn[5];
-    for (int i = 0; i < 5; i++) sn[i] = (uint8_t)(123);
-    tag_handler(sn);
 }
