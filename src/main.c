@@ -45,8 +45,6 @@ static int s_retry_num = 0;
 #define MODE_DONT_READ_TAGS 0
 #define MODE_READ_TAGS_FOR_PRESENCE 1
 #define MODE_READ_TAGS_FOR_REGISTER 2
-char lista[2000] = "";
-char lista_nomes[2000] = "";
 int indexLista = 0;
 int modo = MODE_DONT_READ_TAGS;
 const char separador[2] = {'!'};
@@ -218,7 +216,6 @@ esp_err_t lista_handler(httpd_req_t *req)
     char resposta[25 + (9 + ((9 + TAG_NAME_LEN) * 5) + 1)] = "<h3>Alunos Presentes</h3>";
     char botao[43 + 1] = "<br><a href=\"/\"><button>VOLTAR</button></a>";
     getNamesHtml(AlunosPresentes, resposta);
-    strcat(resposta, lista_nomes);
     strcat(resposta, botao);
     
 	httpd_resp_send(req, resposta, HTTPD_RESP_USE_STRLEN);
@@ -234,10 +231,6 @@ esp_err_t telegram_handler(httpd_req_t *req)
 
 esp_err_t aulafim_handler(httpd_req_t *req)
 {	
-    char lista_Empty[2000] = "";
-    char lista_nomes_Empty[2000] = "";
-    strcpy(lista, lista_Empty);
-    strcpy(lista_nomes, lista_nomes_Empty);
     modo = MODE_DONT_READ_TAGS;  // modo que desabilita salvar as tags.
     
     freeTagsList(AlunosPresentes);
@@ -357,54 +350,6 @@ httpd_handle_t setup_server(void)
     }
 
     return server;
-}
-
-void adicionarLista (char tag[], char nome[], int idx){
-    int pos = idx * 60;
-    int j = 0;
-
-    for (int i = pos; i < (pos + 25); i++){
-        lista[i] = tag[j];
-        j++;
-    }
-    
-    j = 0;
-    for (int i = (pos + 25); i < (pos + 60); i++){
-        lista[i] = nome[j];
-        j++;
-    }
-    char outraLinha[5] = "<br>";
-    strcat(lista_nomes, nome);
-    strcat(lista_nomes, outraLinha);
-    
-    indexLista++;
-}
-
-int existeTagLista (char tag[]){
-    int tamTAG = 25;
-    int tamLIST = (int)sizeof(lista);
-    int i = 0;
-    int j = 0;
-    int idx = 0;
-    while (i < tamLIST){
-        idx = i/60;
-        if (j < tamTAG){
-            if (lista[i] == tag[j]){
-                j++;
-                i++;
-                if (tag[j] == '!'){
-                    printf("Achou tag com index %d \n", idx);
-                    return idx;
-                }
-            } else {
-                i = (idx + 1)*60;
-            }        
-        } else {
-            j = 0;
-        }
-    }
-    printf("NÃO Achou tag \n");
-    return -1;
 }
 
 void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
