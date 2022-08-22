@@ -135,7 +135,7 @@ const char on_resp[] = "<h3>LUZES da Sala: ACESAS</h3><a href=\"/off\"><button>D
 const char off_resp[] = "<h3>LUZES da Sala: APAGADAS</h3><a href=\"/on\"><button>LIGAR</button></a><a href=\"/\"><button>VOLTAR</button></a>";
 const char telegram_resp[] = "<object width='0' height='0' type='text/html' data='https://api.telegram.org/bot5775630816:AAEuxojQRdMLpiVQINcnt0_iMWv87YQjsaM/sendMessage?chat_id=-708112312&text=AULA_INICIADA!!!'></object>Mensagem de in&iacutecio de aula enviada para o Telegram!<br><br><a href=\"/\"><button>VOLTAR</button></a>";
 const char aulafim_telegram_resp[] = "<object width='0' height='0' type='text/html' data='https://api.telegram.org/bot5775630816:AAEuxojQRdMLpiVQINcnt0_iMWv87YQjsaM/sendMessage?chat_id=-708112312&text=AULA_ENCERRADA!!!'></object>Mensagem de aula encerrada enviada para o Telegram!<br><br><a href=\"/\"><button>VOLTAR</button></a>";
-const char cadastro_form[] = "<h1>Cadastro de Aluno</h1><form action='/cadastrar' method='post'><input type='text' id='name' name='name' placeholder='nome do aluno' maxlength='19'><input type='submit' value='Cadastrar'></form>";
+const char cadastro_form[] = "<h1>Cadastro de Aluno</h1><form action='/cadastrar' method='post'><input type='text' id='name' name='name' placeholder='nome do aluno' maxlength='49'><input type='submit' value='Cadastrar'></form>";
 
 esp_err_t cadastro_form_handler(httpd_req_t *req)
 {	
