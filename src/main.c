@@ -405,30 +405,31 @@ int existeTagLista (char tag[]){
 }
 
 void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
-    if (modo != MODE_DONT_READ_TAGS) {
-        char tag[TAG_ID_LEN] = "";
 
-        for (int i = 0; i < 5; i++) {
-            int num = sn[i];
-            char snum[4];
-            snprintf(snum, 4, "%d", num);        
-            strcat(tag, snum);
-            if (i != 4) strcat(tag, ".");
-        }
+    char tag[TAG_ID_LEN] = "";
 
-        strcpy(lastReadTag, tag);
-
-        if (modo == MODE_READ_TAGS_FOR_PRESENCE && idExits(AlunosCadastrados, tag)) {
-            char name[TAG_NAME_LEN];
-            getNameById(AlunosCadastrados, tag, name);
-            tagsListAppend(AlunosPresentes, tag, name);
-
-            vTaskDelay(10);
-            gpio_set_level(RELE_PIN, 1);
-            vTaskDelay(100);
-            gpio_set_level(RELE_PIN, 0);
-        }
+    for (int i = 0; i < 5; i++) {
+        int num = sn[i];
+        char snum[4];
+        snprintf(snum, 4, "%d", num);        
+        strcat(tag, snum);
+        if (i != 4) strcat(tag, ".");
     }
+
+    strcpy(lastReadTag, tag);
+    printf("Tag Atual: %s\n", lastReadTag);
+
+    if (modo == MODE_READ_TAGS_FOR_PRESENCE && idExits(AlunosCadastrados, tag)) {
+        char name[TAG_NAME_LEN];
+        getNameById(AlunosCadastrados, tag, name);
+        tagsListAppend(AlunosPresentes, tag, name);
+
+        vTaskDelay(10);
+        gpio_set_level(RELE_PIN, 1);
+        vTaskDelay(100);
+        gpio_set_level(RELE_PIN, 0);
+    }
+    
 }
 
 void app_main(void)
