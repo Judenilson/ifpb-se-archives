@@ -121,10 +121,10 @@ void getTagsHtml(TagsList *tagsList, char htmlList[]) {
     strcat(htmlList, "<ul>");
     while (tagNodeP) {
       strcat(htmlList, "<li>");
-      strcat(tagNodeP->name, htmlList);
+      strcat(htmlList, tagNodeP->name);
       strcat(htmlList, "</li>");
       strcat(htmlList, "<li>");
-      strcat(tagNodeP->name, htmlList);
+      strcat(htmlList, tagNodeP->name);
       strcat(htmlList, "</li>");
       tagNodeP = tagNodeP->nextNode;
     }
