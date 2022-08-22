@@ -139,9 +139,9 @@ const char aulafim_telegram_resp[] = "<!DOCTYPE html><html><head><meta charset=\
 
 esp_err_t cadastro_form_handler(httpd_req_t *req)
 {	
-    char cadastro_form[270 + TAG_ID_LEN + 1] = "<h1>Cadastro de Aluno</h1><h5>última tag lida: ";
+    char cadastro_form[346 + TAG_ID_LEN + 1] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body><h1>Cadastro de Aluno</h1><h5>última tag lida: ";
     strcat(cadastro_form, lastReadTag);
-    strcat(cadastro_form, " </h5><form action='/cadastrar' method='post'><input type='text' id='name' name='name' placeholder='nome do aluno' maxlength='49'><input type='submit' value='Cadastrar'></form><br><br><a href=\"/\"><button>VOLTAR</button></a>");
+    strcat(cadastro_form, " </h5><form action='/cadastrar' method='post'><input type='text' id='name' name='name' placeholder='nome do aluno' maxlength='49'><input type='submit' value='Cadastrar'></form><br><br><a href=\"/\"><button>VOLTAR</button></a></body></html>");
 	httpd_resp_send(req, cadastro_form, HTTPD_RESP_USE_STRLEN);
     modo = MODE_READ_TAGS_FOR_REGISTER;
     return ESP_OK;
