@@ -229,7 +229,7 @@ esp_err_t cadastros(httpd_req_t *req)
 {	
     char resposta[9 + ((18 + TAG_NAME_LEN + TAG_ID_LEN) * 5) + 1 + 43 + 1] = "<h3>Alunos Cadastrados</h3>";
     char botao[43 + 1] = "<br><a href=\"/\"><button>VOLTAR</button></a>";
-    getTagsHtml(AlunosPresentes, resposta);
+    getTagsHtml(AlunosCadastrados, resposta);
     strcat(resposta, botao);
     
 	httpd_resp_send(req, resposta, HTTPD_RESP_USE_STRLEN);
