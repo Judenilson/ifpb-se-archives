@@ -20,7 +20,8 @@
 
 #define TAG_ID_LEN 16
 #define TAG_NAME_LEN 50
-char lastReadTag[TAG_ID_LEN];
+#define SEM_TAG "sem tag"
+char lastReadTag[TAG_ID_LEN] = SEM_TAG;
 
 #define WIFI_SSID		"TP-LINK_FE84"
 #define WIFI_PASSWORD	"71656137"
@@ -197,7 +198,9 @@ esp_err_t cadastrar_aluno_handler(httpd_req_t *req)
     char aluno_name[TAG_NAME_LEN];
     strncpy(aluno_name, &buf[5], TAG_NAME_LEN);
 
-    tagsListAppend(AlunosCadastrados, lastReadTag, aluno_name);
+    if (strcmp(lastReadTag, SEM_TAG) != 0) {
+        tagsListAppend(AlunosCadastrados, lastReadTag, aluno_name);
+    }
 
     httpd_resp_send(req, aluno_name, req->content_len);
     free(req_hdr);
