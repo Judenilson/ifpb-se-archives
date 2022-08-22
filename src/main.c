@@ -389,10 +389,10 @@ void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
     strcpy(lastReadTag, tag);
     printf("Tag Atual: %s\n", lastReadTag);
 
-    if (modo == MODE_READ_TAGS_FOR_PRESENCE && idExits(AlunosCadastrados, tag)) {
+    if (modo == MODE_READ_TAGS_FOR_PRESENCE && idExits(AlunosCadastrados, tag) == 1) {
         char name[TAG_NAME_LEN];
-        getNameById(AlunosCadastrados, tag, name);
-        tagsListAppend(AlunosPresentes, tag, name);
+        getNameById(AlunosCadastrados, lastReadTag, name);
+        tagsListAppend(AlunosPresentes, lastReadTag, name);
 
         vTaskDelay(10);
         gpio_set_level(RELE_PIN, 1);
