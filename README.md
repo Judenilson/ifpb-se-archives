@@ -14,7 +14,7 @@
 ## 3. Grupo
 
 -   [Antonio Carlos Albuquerque Alves](https://github.com/antonio357)
--   [David Victor dos Santos Andrade](https://github.com/davidvictor66)
+-   [David Victor Dos Santos Andrade](https://github.com/davidvictor66)
 -   [Judenilson Araujo Silva](https://github.com/Judenilson)
 
 ## 4. Descrição do projeto
