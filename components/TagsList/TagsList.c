@@ -168,6 +168,8 @@ TagsList* CreateTagsListFromString(const char string[]) {
     if (string[i] == ':') {
       reading_id = 0;
     } else if (string[i] == ';') {
+      printf("\nid = %s \n", id);
+      printf("name = %s \n", name);
       tagsListAppend(newTagsList, id, name);
       strcpy(id, "");
       strcpy(name, "");
@@ -180,6 +182,7 @@ TagsList* CreateTagsListFromString(const char string[]) {
     } else {
       strcpy(buffer, "");
       strncpy(buffer, &string[i], 1); 
+      printf("\n buffer = %s \n", buffer);
       if (reading_id == 1) {
         strcat(id, buffer); 
       }
