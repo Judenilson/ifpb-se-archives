@@ -463,20 +463,46 @@ void saveFile(const char key[], const char value[])
     nvs_close(my_handle);
 }
 
+size_t checkKeyExists(nvs_handle_t* handle, const char key[]) {
+    size_t required_size = 0;
+    nvs_get_str(*handle, key, NULL, &required_size);
+    if (required_size > 0) { // se encontrou o cado na memória    
+        printf("Found %s: in flash memory\n", key);
+    } else {
+        printf("MEMORY WARNNING: Could not find %s: in flash memory\n", key);
+    }
+    return required_size;
+}
+
+void deleteFile(const char key[]) {
+    nvs_handle_t my_handle;
+    nvs_open("storage", NVS_READWRITE, &my_handle);
+
+    size_t required_size = checkKeyExists(&my_handle, key);
+    if (required_size > 0) { // se encontrou o cado na memória
+        nvs_erase_key(my_handle, key);    
+        printf("Erased %s\n", key);
+    } else {
+        printf("Could not erase %s\n", key);
+    }
+
+    nvs_commit(my_handle);
+    nvs_close(my_handle);
+}
+
 void readFile(const char key[])
 {    
     nvs_handle_t my_handle;
     nvs_open("storage", NVS_READONLY, &my_handle);
 
     // Read data, key - "key", value - "read_data"
-    size_t required_size = 0;
-    nvs_get_str(my_handle, key, NULL, &required_size);
+    size_t required_size = checkKeyExists(&my_handle, key);
     if (required_size > 0) { // se encontrou o cado na memória
         char *server_name = malloc(required_size);
         nvs_get_str(my_handle, key, server_name, &required_size);    
         printf("Read %s: %s\n", key, server_name);
     } else {
-        printf("MEMORY WARNNING: Could not find %s: in flash memory\n", key);
+        printf("Could not read %s\n", key);
     }
 
     nvs_close(my_handle);
@@ -527,7 +553,13 @@ void app_main(void)
     // readFile(QUANT_CADASTROS);
 
     // testando overwrite
+    // saveFile("aluno_1_name", "Antonio Carlos");
+    // saveFile("aluno_1_name", "Judenilson Araújo");
+    // readFile("aluno_1_name");
+
+    // testando delete
     saveFile("aluno_1_name", "Antonio Carlos");
-    saveFile("aluno_1_name", "Judenilson Araújo");
+    readFile("aluno_1_name");
+    deleteFile("aluno_1_name");
     readFile("aluno_1_name");
 }
