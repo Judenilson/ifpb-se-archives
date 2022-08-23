@@ -10,6 +10,7 @@
 #include "esp_event.h"
 #include "esp_log.h"
 #include "nvs_flash.h"
+#include "nvs.h"
 #include "lwip/err.h"
 #include "lwip/sys.h"
 #include <esp_http_server.h>
@@ -446,6 +447,41 @@ void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
         gpio_set_level(RELE_PIN, 0);
     }
     
+}
+
+void saveFile(void)
+{
+    nvs_handle_t my_handle;
+    nvs_open("storage", NVS_READWRITE, &my_handle);
+
+    // Write data, key - "data", value - "write_string"
+    char *write_string = "Aluno1\0";
+    nvs_set_str(my_handle, "data", write_string);
+    char *write_string2 = "Aluno2\0";
+    nvs_set_str(my_handle, "data2", write_string2);
+    printf("Write data: %s\n", write_string);
+    nvs_commit(my_handle);
+
+    nvs_close(my_handle);
+}
+
+void readFile(void)
+{    
+    nvs_handle_t my_handle;
+    nvs_open("storage", NVS_READONLY, &my_handle);
+
+    // Read data, key - "data", value - "read_data"
+    size_t required_size = 0;
+    nvs_get_str(my_handle, "data", NULL, &required_size);
+    nvs_get_str(my_handle, "data2", NULL, &required_size);
+    char *server_name = malloc(required_size);
+    char *server_name2 = malloc(required_size);
+    nvs_get_str(my_handle, "data", server_name, &required_size);    
+    nvs_get_str(my_handle, "data2", server_name2, &required_size);
+    printf("Read data: %s\n", server_name);
+    printf("Read data: %s\n", server_name2);
+
+    nvs_close(my_handle);
 }
 
 void app_main(void)
