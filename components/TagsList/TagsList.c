@@ -163,6 +163,7 @@ TagsList* CreateTagsListFromString(const char string[]) {
   char name[TAG_NAME_LEN] = "";
   int reading_id = 1;
   int counter = 0;
+  char buffer[2];
   for (int i = 0; i < strlen(string); i++) {
     if (string[i] == ':') {
       reading_id = 0;
@@ -177,11 +178,13 @@ TagsList* CreateTagsListFromString(const char string[]) {
         break;
       }
     } else {
+      strcpy(buffer, "");
+      strncpy(buffer, &string[i], 1); 
       if (reading_id == 1) {
-        strcat(id, string[i]);
+        strcat(id, buffer); 
       }
       else {
-        strcat(name, string[i]);
+        strcat(name, buffer);
       }
     }
   }

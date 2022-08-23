@@ -2,6 +2,8 @@
 #include "nvs_flash.h"
 #include "nvs.h"
 
-void saveString(const char string[]) {
+void initPersit() {}
 
+void saveString(const char string[]) {
+  
 }
