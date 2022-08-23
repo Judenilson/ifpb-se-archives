@@ -17,6 +17,7 @@
 #include "sdkconfig.h"
 #include "rc522.c"
 #include "TagsList.h"
+// #include "Persist.h"
 
 #define MAX_TAGS 5
 #define TAG_ID_LEN 16
@@ -449,6 +450,8 @@ void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
 
 void app_main(void)
 {
+    // initPersit();
+    
     AlunosCadastrados = CreateTagsList();
     AlunosPresentes = CreateTagsList();
     const rc522_start_args_t rfid = {
@@ -467,14 +470,6 @@ void app_main(void)
 	gpio_set_direction(LIGHT_PIN, GPIO_MODE_OUTPUT);
 	gpio_set_level(LIGHT_PIN, 0);
 	light_state = 0;
-
-    // Initialize NVS caso necessite guardar alguma config na flash.
-    esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-      ESP_ERROR_CHECK(nvs_flash_erase());
-      ret = nvs_flash_init();
-    }
-    ESP_ERROR_CHECK(ret);
 
     ESP_LOGI(TAGM, "ESP_WIFI_MODE_STA");
     wifi_init_sta();        
