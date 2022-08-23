@@ -448,37 +448,34 @@ void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
     
 }
 
-void saveFile(void)
+void saveFile(const char key[], const char value[])
 {
     nvs_handle_t my_handle;
     nvs_open("storage", NVS_READWRITE, &my_handle);
 
-    // Write data, key - "data", value - "write_string"
-    char *write_string = "Aluno1\0";
-    nvs_set_str(my_handle, "data", write_string);
-    char *write_string2 = "Aluno2\0";
-    nvs_set_str(my_handle, "data2", write_string2);
-    printf("Write data: %s\n", write_string);
-    nvs_commit(my_handle);
+    // Write data, key - "key", value - "value"
+    nvs_set_str(my_handle, key, value);
+    printf("Write %s: %s\n", key, value);
 
+    nvs_commit(my_handle);
     nvs_close(my_handle);
 }
 
-void readFile(void)
+void readFile(const char key[])
 {    
     nvs_handle_t my_handle;
     nvs_open("storage", NVS_READONLY, &my_handle);
 
-    // Read data, key - "data", value - "read_data"
+    // Read data, key - "key", value - "read_data"
     size_t required_size = 0;
-    nvs_get_str(my_handle, "data", NULL, &required_size);
-    nvs_get_str(my_handle, "data2", NULL, &required_size);
-    char *server_name = malloc(required_size);
-    char *server_name2 = malloc(required_size);
-    nvs_get_str(my_handle, "data", server_name, &required_size);    
-    nvs_get_str(my_handle, "data2", server_name2, &required_size);
-    printf("Read data: %s\n", server_name);
-    printf("Read data: %s\n", server_name2);
+    nvs_get_str(my_handle, key, NULL, &required_size);
+    if (required_size > 0) { // se encontrou o cado na memória
+        char *server_name = malloc(required_size);
+        nvs_get_str(my_handle, key, server_name, &required_size);    
+        printf("Read %s: %s\n", key, server_name);
+    } else {
+        printf("MEMORY WARNNING: Could not find %s: in flash memory\n", key);
+    }
 
     nvs_close(my_handle);
 }
