@@ -1,1 +1,1 @@
-void saveString(const char[]);
+void saveString(const char string[]);
