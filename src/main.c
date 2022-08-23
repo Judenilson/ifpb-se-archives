@@ -421,11 +421,10 @@ void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
         char snum[4];
         snprintf(snum, 4, "%d", num);        
         strcat(tag, snum);
-        if (i != 4) strcat(tag, ".");
     }
 
     strcpy(lastReadTag, tag);
-    printf("Tag Atual: %s\n", lastReadTag);
+    printf("\nTag Atual: %s\n", lastReadTag);
 
     if (modo == MODE_READ_TAGS_FOR_PRESENCE && idExits(AlunosCadastrados, tag) == 1) {
         char name[TAG_NAME_LEN];
