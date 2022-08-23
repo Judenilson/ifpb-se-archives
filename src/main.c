@@ -23,7 +23,7 @@
 #define TAG_ID_LEN 16
 #define TAG_NAME_LEN 50
 #define NO_TAG "nenhuma tag"
-char lastReadTag[TAG_ID_LEN] = "123123123123123";
+char lastReadTag[TAG_ID_LEN] = NO_TAG;
 #define LEN_BOTOES_CADASTRAR_RESPONSE 126
 
 #define ALUNOS_CADASTRADOS "my_key"
