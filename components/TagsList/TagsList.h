@@ -35,3 +35,5 @@ void getTagsHtml(TagsList *tagsList, char htmlList[]);
 void getString(TagsList *tagsList, char string[]);
 
 TagsList* CreateTagsListFromString(const char string[]);
+
+void tagsListDelete(TagsList *tagsList, const char id[]);

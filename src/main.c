@@ -549,4 +549,34 @@ void app_main(void)
     readFile(ALUNOS_CADASTRADOS, string);
     AlunosCadastrados = CreateTagsListFromString(string);
     AlunosPresentes = CreateTagsList();
+
+
+    // testando operação de delete da lista
+
+    TagsList* newTagList = CreateTagsList();
+    printTagsList(newTagList);
+    tagsListDelete(newTagList, "111111111111111");
+    printTagsList(newTagList);
+    tagsListAppend(newTagList, "111111111111111", "antônio carlos");
+    printTagsList(newTagList);
+    tagsListDelete(newTagList, "111111111111111");
+    printTagsList(newTagList);
+    tagsListAppend(newTagList, "111111111111111", "antônio carlos");
+    tagsListAppend(newTagList, "222222222222222", "antônio carlos");
+    tagsListAppend(newTagList, "333333333333333", "antônio carlos");
+    tagsListAppend(newTagList, "444444444444444", "antônio carlos");
+    tagsListAppend(newTagList, "555555555555555", "antônio carlos");
+    printTagsList(newTagList);
+    tagsListDelete(newTagList, "333333333333333");
+    printTagsList(newTagList);
+    tagsListDelete(newTagList, "555555555555555");
+    printTagsList(newTagList);
+    tagsListDelete(newTagList, "111111111111111");
+    printTagsList(newTagList);
+    tagsListDelete(newTagList, "444444444444444");
+    printTagsList(newTagList);
+    tagsListAppend(newTagList, "444444444444444", "antônio carlos");
+    printTagsList(newTagList);
+    tagsListDelete(newTagList, "222222222222222");
+    printTagsList(newTagList);
 }

@@ -196,3 +196,24 @@ TagsList* CreateTagsListFromString(const char string[]) {
 
   return newTagsList;
 }
+
+void tagsListDelete(TagsList *tagsList, const char id[]) {
+  if (tagsList->len > 0) {
+    TagNode *tagNodeP = tagsList->firstNode;
+    TagNode *preTagNodeP = NULL;
+    while (tagNodeP) {
+      if (strcmp(tagNodeP->id, id) == 0) {
+        if (preTagNodeP) { // passou do primeiro node
+          preTagNodeP->nextNode = tagNodeP->nextNode;
+        } else { // ta no primeiro node
+          tagsList->firstNode = tagNodeP->nextNode;
+        }
+        tagsList->len = tagsList->len - 1;
+        free(tagNodeP);
+        break;
+      }
+      preTagNodeP = tagNodeP;
+      tagNodeP = tagNodeP->nextNode;
+    }
+  }
+}
