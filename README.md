@@ -30,3 +30,20 @@ Nesse projeto foi realizado desenvolvimento de um sistema embarcado que é capaz
 ### 5.2. Específicos
 
 -   Criar um prototipo que seja capaz de realizar a presença dos alunos, controlando o acesso com trava elétrica na porta e a iluminação do ambiente.
+
+## 6. Resumo das arquiteturas
+
+Todo _Hardware_ apresentado no tópico 6.1 foi construído no aplicativo Fritzzing e o _Firmware e/ou Software/App_ utilizando o Visual Studio Code, com arquitetuda do ESP-IDF.
+
+### 6.1. Desenhos
+-   Breadboard
+
+![Visualização do Breadboard](https://github.com/Judenilson/projeto_se/blob/imgs/Projeto%20Controle%20Acesso%20Alunos_bb.png)
+
+-   PCB
+
+![pcb](https://github.com/Judenilson/projeto_se/blob/imgs/Projeto%20Controle%20Acesso%20Alunos_pcb.png)
+
+-   Esquema elétrônico
+
+![Schematic](https://github.com/Judenilson/projeto_se/blob/imgs/Projeto%20Controle%20Acesso%20Alunos_schem.png)
