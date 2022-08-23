@@ -1,1 +1,1 @@
-
+void saveString(const char[]);
