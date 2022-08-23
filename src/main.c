@@ -558,8 +558,19 @@ void app_main(void)
     // readFile("aluno_1_name");
 
     // testando delete
-    saveFile("aluno_1_name", "Antonio Carlos");
-    readFile("aluno_1_name");
-    deleteFile("aluno_1_name");
-    readFile("aluno_1_name");
+    // saveFile("aluno_1_name", "Antonio Carlos");
+    // readFile("aluno_1_name");
+    // deleteFile("aluno_1_name");
+    // readFile("aluno_1_name");
+
+    // testango converção
+    tagsListAppend(AlunosCadastrados, "123123123123123", "antonio carlos");
+    tagsListAppend(AlunosCadastrados, "124124124124124", "judenilson araújo");
+    tagsListAppend(AlunosCadastrados, "125125125125125", "david victor");
+    char string[((TAG_ID_LEN + TAG_NAME_LEN) * 5) + 1];
+    getString(AlunosCadastrados, string);
+    printf("\n string = %s \n", string);
+
+    TagsList* newTagList = CreateTagsListFromString(string);
+    printTagsList(newTagList);
 }
