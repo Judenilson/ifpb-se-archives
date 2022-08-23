@@ -38,12 +38,12 @@ Todo _Hardware_ apresentado no tópico 6.1 foi construído no aplicativo Fritzzi
 ### 6.1. Desenhos
 -   Breadboard
 
-![Visualização do Breadboard](https://github.com/Judenilson/projeto_se/blob/imgs/Projeto%20Controle%20Acesso%20Alunos_bb.png)
+![Visualização do Breadboard](https://github.com/Judenilson/projeto_se/blob/Master/imgs/Projeto%20Controle%20Acesso%20Alunos_bb.png)
 
 -   PCB
 
-![pcb](https://github.com/Judenilson/projeto_se/blob/imgs/Projeto%20Controle%20Acesso%20Alunos_pcb.png)
+![pcb](https://github.com/Judenilson/projeto_se/blob/Master/imgs/Projeto%20Controle%20Acesso%20Alunos_pcb.png)
 
 -   Esquema elétrônico
 
-![Schematic](https://github.com/Judenilson/projeto_se/blob/imgs/Projeto%20Controle%20Acesso%20Alunos_schem.png)
+![Schematic](https://github.com/Judenilson/projeto_se/blob/Master/imgs/Projeto%20Controle%20Acesso%20Alunos_schem.png)
