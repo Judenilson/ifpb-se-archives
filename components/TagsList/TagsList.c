@@ -140,6 +140,26 @@ void getTagsHtml(TagsList *tagsList, char htmlList[]) {
   else strcat(htmlList, "<ul></ul>");
 }
 
+void getTagsHtmlToDelete(TagsList *tagsList, char htmlList[]) {
+  strcpy(htmlList, "");
+  if (tagsList->len > 0) {
+    TagNode *tagNodeP = tagsList->firstNode;
+    // htmlList[9 + ((257 + TAG_NAME_LEN + TAG_ID_LEN) * MAX_TAGS) + 1] = "";
+    // <li><form action='/descadastrar' method='post'><input type='submit' value='Descadastrar'><textarea readonly name='cadastro' id='cadastro' style='background:0;border:0;width:400px;overflow:visible;outline:0;outline:0;height:10px;'>123123123123123 : antônio carlos</textarea></form></li>
+    strcat(htmlList, "<ul>");
+    while (tagNodeP) {
+      strcat(htmlList, "<li><form action='/descadastrar' method='post'><input type='submit' value='Descadastrar'><textarea readonly name='cadastro' id='cadastro' style='background:0;border:0;width:400px;overflow:visible;outline:0;outline:0;height:10px;'> ");
+      strcat(htmlList, tagNodeP->id);
+      strcat(htmlList, " - ");
+      strcat(htmlList, tagNodeP->name);
+      strcat(htmlList, "</textarea></form></li>");
+      tagNodeP = tagNodeP->nextNode;
+    }
+    strcat(htmlList, "</ul>");
+  }
+  else strcat(htmlList, "<ul></ul>");
+}
+
 void getString(TagsList *tagsList, char string[]) {
   char tmpString[((TAG_ID_LEN + TAG_NAME_LEN + 1 + 1) * MAX_TAGS) + 1] = "";
 
@@ -195,4 +215,25 @@ TagsList* CreateTagsListFromString(const char string[]) {
   }
 
   return newTagsList;
+}
+
+void tagsListDelete(TagsList *tagsList, const char id[]) {
+  if (tagsList->len > 0) {
+    TagNode *tagNodeP = tagsList->firstNode;
+    TagNode *preTagNodeP = NULL;
+    while (tagNodeP) {
+      if (strcmp(tagNodeP->id, id) == 0) {
+        if (preTagNodeP) { // passou do primeiro node
+          preTagNodeP->nextNode = tagNodeP->nextNode;
+        } else { // ta no primeiro node
+          tagsList->firstNode = tagNodeP->nextNode;
+        }
+        tagsList->len = tagsList->len - 1;
+        free(tagNodeP);
+        break;
+      }
+      preTagNodeP = tagNodeP;
+      tagNodeP = tagNodeP->nextNode;
+    }
+  }
 }
