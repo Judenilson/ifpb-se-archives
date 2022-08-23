@@ -490,7 +490,7 @@ void deleteFile(const char key[]) {
     nvs_close(my_handle);
 }
 
-void readFile(const char key[])
+void readFile(const char key[], char* string)
 {    
     nvs_handle_t my_handle;
     nvs_open("storage", NVS_READONLY, &my_handle);
@@ -498,9 +498,9 @@ void readFile(const char key[])
     // Read data, key - "key", value - "read_data"
     size_t required_size = checkKeyExists(&my_handle, key);
     if (required_size > 0) { // se encontrou o cado na memória
-        char *server_name = malloc(required_size);
-        nvs_get_str(my_handle, key, server_name, &required_size);    
-        printf("Read %s: %s\n", key, server_name);
+        *string = malloc(required_size);
+        nvs_get_str(my_handle, key, string, &required_size);    
+        printf("Read %s: %s\n", key, string);
     } else {
         printf("Could not read %s\n", key);
     }
