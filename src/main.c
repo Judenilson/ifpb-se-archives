@@ -104,8 +104,9 @@ void readFile(const char key[], char* string)
     if (required_size > 0) { // se encontrou o cado na memória
         char *server_name = malloc(required_size);
         nvs_get_str(my_handle, key, server_name, &required_size);
-        strcpy(string, server_name);    
-        printf("Read %s: %s\n", key, server_name);
+        strcpy(string, server_name);   
+        free(server_name); 
+        printf("Read %s: %s\n", key, string);
     } else {
         printf("Could not read %s\n", key);
     }
