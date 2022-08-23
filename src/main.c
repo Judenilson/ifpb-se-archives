@@ -197,8 +197,12 @@ esp_err_t cadastrar_aluno_handler(httpd_req_t *req)
         httpd_resp_set_hdr(req, "Custom", req_hdr);
     }
     char aluno_name[TAG_NAME_LEN];
-    strncpy(aluno_name, &buf[5], TAG_NAME_LEN);
-
+    strncpy(aluno_name, &buf[5], TAG_NAME_LEN);    
+    for (int i = 0; i< strlen(aluno_name); i++){
+        if (aluno_name[i] == '+'){
+            aluno_name[i] = ' ';
+        }
+    }
     printf("\n Cadastrando aluno \n");
     printf("aluno_name = %s \n", aluno_name);
     printf("lastReadTag = %s \n", lastReadTag);
