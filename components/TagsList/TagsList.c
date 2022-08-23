@@ -3,6 +3,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_TAGS 5
+#define TAG_ID_LEN 16
+#define TAG_NAME_LEN 50
+
+const char delimit_id_name[] = ":";
+const char delimit_node[] = ";";
+
 TagsList *CreateTagsList() {
   TagsList *newTagsList = (TagsList *)malloc(sizeof(TagsList));
   newTagsList->len = 0;
@@ -131,4 +138,61 @@ void getTagsHtml(TagsList *tagsList, char htmlList[]) {
     strcat(htmlList, "</ul>");
   }
   else strcat(htmlList, "<ul></ul>");
+}
+
+void getString(TagsList *tagsList, char string[]) {
+  char tmpString[((TAG_ID_LEN + TAG_NAME_LEN + 1 + 1) * MAX_TAGS) + 1] = "";
+
+  if (tagsList->len > 0) {
+    TagNode *tagNodeP = tagsList->firstNode;
+    while (tagNodeP) {
+      strcat(tmpString, tagNodeP->id);
+      strcat(tmpString, delimit_id_name);
+      strcat(tmpString, tagNodeP->name);
+      strcat(tmpString, delimit_node);
+      tagNodeP = tagNodeP->nextNode;
+    }
+  }
+
+  strcpy(string, tmpString);
+}
+
+TagsList* CreateTagsListFromString(const char string[]) {
+  TagsList* newTagsList = CreateTagsList();
+  char id[TAG_ID_LEN] = "";
+  char name[TAG_NAME_LEN] = "";
+  int idxId = 0;
+  int idxName = 0;
+  int reading_id = 1;
+  int counter = 0;
+  for (int i = 0; i < strlen(string); i++) {
+    if (string[i] == ':') {
+      reading_id = 0;
+    } else if (string[i] == ';') {
+      id[idxId] = '\0';
+      name[idxName] = '\0';
+      tagsListAppend(newTagsList, id, name);
+      strcpy(id, "");
+      strcpy(name, "");
+      idxId = 0;
+      idxName = 0;
+      reading_id = 1;
+
+      counter = counter + 1;
+      if (counter >= MAX_TAGS) {
+        break;
+      }
+    } else {
+      if (reading_id == 1) {
+        id[idxId] = string[i]; 
+        idxId++;
+      }
+      else {
+        name[idxName] = string[i];
+        idxName++;
+      }
+    }
+  }
+
+  return newTagsList;
 }

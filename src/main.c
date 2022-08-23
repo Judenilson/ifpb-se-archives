@@ -10,6 +10,7 @@
 #include "esp_event.h"
 #include "esp_log.h"
 #include "nvs_flash.h"
+#include "nvs.h"
 #include "lwip/err.h"
 #include "lwip/sys.h"
 #include <esp_http_server.h>
@@ -22,8 +23,11 @@
 #define TAG_ID_LEN 16
 #define TAG_NAME_LEN 50
 #define NO_TAG "nenhuma tag"
-char lastReadTag[TAG_ID_LEN] = NO_TAG;
+char lastReadTag[TAG_ID_LEN] = "123123123123123";
 #define LEN_BOTOES_CADASTRAR_RESPONSE 126
+
+#define ALUNOS_CADASTRADOS "my_key"
+char string[((TAG_ID_LEN + TAG_NAME_LEN + 1 + 1) * MAX_TAGS) + 1] = "";
 
 #define WIFI_SSID		"TP-LINK_FE84"
 #define WIFI_PASSWORD	"71656137"
@@ -50,6 +54,64 @@ static int s_retry_num = 0;
 #define MODE_READ_TAGS_FOR_REGISTER 2
 int modo = MODE_DONT_READ_TAGS;
 
+void saveFile(const char key[], const char value[])
+{
+    nvs_handle_t my_handle;
+    nvs_open("storage", NVS_READWRITE, &my_handle);
+
+    // Write data, key - "key", value - "value"
+    nvs_set_str(my_handle, key, value);
+    printf("Write %s: %s\n", key, value);
+
+    nvs_commit(my_handle);
+    nvs_close(my_handle);
+}
+
+size_t checkKeyExists(nvs_handle_t* handle, const char key[]) {
+    size_t required_size = 0;
+    nvs_get_str(*handle, key, NULL, &required_size);
+    if (required_size > 0) { // se encontrou o cado na memória    
+        printf("Found %s: in flash memory\n", key);
+    } else {
+        printf("MEMORY WARNNING: Could not find %s: in flash memory\n", key);
+    }
+    return required_size;
+}
+
+void deleteFile(const char key[]) {
+    nvs_handle_t my_handle;
+    nvs_open("storage", NVS_READWRITE, &my_handle);
+
+    size_t required_size = checkKeyExists(&my_handle, key);
+    if (required_size > 0) { // se encontrou o cado na memória
+        nvs_erase_key(my_handle, key);    
+        printf("Erased %s\n", key);
+    } else {
+        printf("Could not erase %s\n", key);
+    }
+
+    nvs_commit(my_handle);
+    nvs_close(my_handle);
+}
+
+void readFile(const char key[], char* string)
+{    
+    nvs_handle_t my_handle;
+    nvs_open("storage", NVS_READONLY, &my_handle);
+
+    // Read data, key - "key", value - "read_data"
+    size_t required_size = checkKeyExists(&my_handle, key);
+    if (required_size > 0) { // se encontrou o cado na memória
+        char *server_name = malloc(required_size);
+        nvs_get_str(my_handle, key, server_name, &required_size);
+        strcpy(string, server_name);    
+        printf("Read %s: %s\n", key, server_name);
+    } else {
+        printf("Could not read %s\n", key);
+    }
+
+    nvs_close(my_handle);
+}
 
 static void event_handler(void* arg, esp_event_base_t event_base,
                                 int32_t event_id, void* event_data)
@@ -211,6 +273,10 @@ esp_err_t cadastrar_aluno_handler(httpd_req_t *req)
     // cadastro vai funcionar
     if (strcmp(aluno_name, "") != 0 && strcmp(lastReadTag, NO_TAG) != 0 && idExits(AlunosCadastrados, lastReadTag) == 0) {
         tagsListAppend(AlunosCadastrados, lastReadTag, aluno_name);
+
+        getString(AlunosCadastrados, string);
+        saveFile(ALUNOS_CADASTRADOS, string);
+
         char response[TAG_ID_LEN + TAG_NAME_LEN  + LEN_BOTOES_CADASTRAR_RESPONSE + 100 + 1] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body> Aluno ";
         strcat(response, aluno_name); 
         strcat(response, " cadastrado com a tag ");
@@ -449,8 +515,6 @@ void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
 
 void app_main(void)
 {
-    AlunosCadastrados = CreateTagsList();
-    AlunosPresentes = CreateTagsList();
     const rc522_start_args_t rfid = {
         .miso_io  = 25,
         .mosi_io  = 23,
@@ -479,4 +543,10 @@ void app_main(void)
     ESP_LOGI(TAGM, "ESP_WIFI_MODE_STA");
     wifi_init_sta();        
 	setup_server();
+
+    // tem que deixa isso no final do main se não não roda
+    printf("\n\n lendo da memória \n\n");
+    readFile(ALUNOS_CADASTRADOS, string);
+    AlunosCadastrados = CreateTagsListFromString(string);
+    AlunosPresentes = CreateTagsList();
 }
