@@ -194,7 +194,7 @@ void wifi_init_sta(void)
     }
 }
 
-const char menu_resp[] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body><h3>Controle de Presença</h3><a href=\"/light\"><button>Luzes</button></a><br><a href=\"/lista\"><button>Lista de Presença</button></a><a href=\"/cadastros\"><button>Lista de Cadastros</button></a><br><br><br><a href=\"/telegram\"><button>Iniciar Aula</button></a><a href=\"/aulafim\"><button>Encerrar Aula</button></a><br><a href=\"/cadastro\"><button>Cadastrar Aluno</button></a></body></html>";
+const char menu_resp[] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body><h3>Controle de Presença</h3><a href=\"/light\"><button>Luzes</button></a><br><a href=\"/lista\"><button>Lista de Presença</button></a><a href=\"/cadastros\"><button>Lista de Cadastros</button></a><br><br><br><a href=\"/telegram\"><button>Iniciar Aula</button></a><a href=\"/aulafim\"><button>Encerrar Aula</button></a><br><a href=\"/cadastro\"><button>Cadastrar Aluno</button></a><a href=\"/descadastros\"><button>Descadastrar Aluno</button></a></body></html>";
 const char on_resp[] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body><h3>LUZES da Sala: ACESAS</h3><a href=\"/off\"><button>DESLIGAR</button></a><a href=\"/\"><button>VOLTAR</button></a></body></html>";
 const char off_resp[] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body><h3>LUZES da Sala: APAGADAS</h3><a href=\"/on\"><button>LIGAR</button></a><a href=\"/\"><button>VOLTAR</button></a></body></html>";
 const char telegram_resp[] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body><object width='0' height='0' type='text/html' data='https://api.telegram.org/bot5775630816:AAEuxojQRdMLpiVQINcnt0_iMWv87YQjsaM/sendMessage?chat_id=-708112312&text=AULA_INICIADA!!!'></object>Mensagem de início de aula enviada para o Telegram!<br><br><a href=\"/\"><button>VOLTAR</button></a></body></html>";
@@ -261,7 +261,7 @@ esp_err_t cadastrar_aluno_handler(httpd_req_t *req)
     }
     char aluno_name[TAG_NAME_LEN];
     strncpy(aluno_name, &buf[5], TAG_NAME_LEN);    
-    for (int i = 0; i< strlen(aluno_name); i++){
+    for (int i = 0; i < strlen(aluno_name); i++) {
         if (aluno_name[i] == '+'){
             aluno_name[i] = ' ';
         }
@@ -315,6 +315,98 @@ esp_err_t cadastrar_aluno_handler(httpd_req_t *req)
             httpd_resp_send(req, response, strlen(response));
         }
     }
+
+    free(req_hdr);
+    free(buf);
+    return ESP_OK;
+}
+
+void render_descadastros(char page[]) {
+    // page[154 + ((106 + TAG_NAME_LEN + TAG_ID_LEN) * MAX_TAGS) + 1] = "";
+    strcpy(page, "");
+    strcat(page, "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body><h1>Alunos Cadastrados</h1>");
+    char lista_para_descadastrar[9 + ((257 + TAG_NAME_LEN + TAG_ID_LEN) * MAX_TAGS) + 1] = "";
+    getTagsHtmlToDelete(AlunosCadastrados, lista_para_descadastrar);
+    strcat(page, lista_para_descadastrar);
+    strcat(page, "<br><br><a href=\"/\"><button>VOLTAR</button></a>");
+    strcat(page, "</body></html>");
+}
+
+esp_err_t descadastros_aluno_handler(httpd_req_t *req)
+{
+    char response[154 + ((106 + TAG_NAME_LEN + TAG_ID_LEN) * MAX_TAGS) + 1] = "";
+    render_descadastros(response);
+    httpd_resp_send(req, response, strlen(response));
+    return ESP_OK;
+}
+
+esp_err_t descadastrar_aluno_handler(httpd_req_t *req)
+{
+    ESP_LOGI(TAGM, "/echo handler read content length %d", req->content_len);
+
+    char*  buf = malloc(req->content_len + 1);
+    size_t off = 0;
+    int    ret;
+
+    if (!buf) {
+        ESP_LOGE(TAGM, "Failed to allocate memory of %d bytes!", req->content_len + 1);
+        httpd_resp_send_500(req);
+        return ESP_FAIL;
+    }
+
+    while (off < req->content_len) {
+        /* Read data received in the request */
+        ret = httpd_req_recv(req, buf + off, req->content_len - off);
+        if (ret <= 0) {
+            if (ret == HTTPD_SOCK_ERR_TIMEOUT) {
+                httpd_resp_send_408(req);
+            }
+            free(buf);
+            return ESP_FAIL;
+        }
+        off += ret;
+        ESP_LOGI(TAGM, "/echo handler recv length %d", ret);
+    }
+    buf[off] = '\0';
+
+    if (req->content_len < 128) {
+        ESP_LOGI(TAGM, "/echo handler read %s", buf);
+    }
+
+    /* Search for Custom header field */
+    char*  req_hdr = 0;
+    size_t hdr_len = httpd_req_get_hdr_value_len(req, "Custom");
+    if (hdr_len) {
+        /* Read Custom header value */
+        req_hdr = malloc(hdr_len + 1);
+        if (!req_hdr) {
+            ESP_LOGE(TAG, "Failed to allocate memory of %d bytes!", hdr_len + 1);
+            httpd_resp_send_500(req);
+            return ESP_FAIL;
+        }
+        httpd_req_get_hdr_value_str(req, "Custom", req_hdr, hdr_len + 1);
+
+        /* Set as additional header for response packet */
+        httpd_resp_set_hdr(req, "Custom", req_hdr);
+    }
+
+    char id[TAG_ID_LEN] = "";
+    int idxId = 0;
+    for (int i = 10; i < strlen(buf); i++) {
+        if (buf[i] != '+') {
+            id[idxId] = buf[i];
+            idxId++;
+        } else {
+            id[idxId] = '\0';
+            break;
+        }
+    }
+
+    tagsListDelete(AlunosCadastrados, id);
+    getString(AlunosCadastrados, string);
+    saveFile(ALUNOS_CADASTRADOS, string);
+
+    descadastros_aluno_handler(req);
 
     free(req_hdr);
     free(buf);
@@ -421,6 +513,20 @@ httpd_uri_t uri_cadastrar = {
     .user_ctx = NULL
 };
 
+httpd_uri_t uri_descadastros = {
+    .uri      = "/descadastros",
+    .method   = HTTP_GET,
+    .handler  = descadastros_aluno_handler,
+    .user_ctx = NULL
+};
+
+httpd_uri_t uri_descadastrar = {
+    .uri      = "/descadastrar",
+    .method   = HTTP_POST,
+    .handler  = descadastrar_aluno_handler,
+    .user_ctx = NULL
+};
+
 httpd_uri_t uri_lista = {
     .uri      = "/lista",
     .method   = HTTP_GET,
@@ -467,7 +573,7 @@ httpd_uri_t uri_off = {
 httpd_handle_t setup_server(void)
 {
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-    config.max_uri_handlers = 10;
+    config.max_uri_handlers = 12;
     httpd_handle_t server = NULL;
     config.stack_size = 20480;
 
@@ -482,6 +588,8 @@ httpd_handle_t setup_server(void)
         httpd_register_uri_handler(server, &uri_cadastro);
         httpd_register_uri_handler(server, &uri_cadastrar);
         httpd_register_uri_handler(server, &uri_cadastros);
+        httpd_register_uri_handler(server, &uri_descadastrar);
+        httpd_register_uri_handler(server, &uri_descadastros);
     }
 
     return server;
