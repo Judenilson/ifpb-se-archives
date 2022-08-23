@@ -199,11 +199,15 @@ esp_err_t cadastrar_aluno_handler(httpd_req_t *req)
     char aluno_name[TAG_NAME_LEN];
     strncpy(aluno_name, &buf[5], TAG_NAME_LEN);
 
-    const char botoes[] = "<br><br><a href=\"/cadastro\"><button>TELA DE CADASTRO</button></a><a href=\"/cadastros\"><button>ALUNOS CADASTRADOS</button></a>";
+    printf("\n Cadastrando aluno \n");
+    printf("aluno_name = %s \n", aluno_name);
+    printf("lastReadTag = %s \n", lastReadTag);
+
+    const char botoes[] = "<br><br><a href=\"/cadastro\"><button>TELA DE CADASTRO</button></a><a href=\"/cadastros\"><button>ALUNOS CADASTRADOS</button></a></body></html>";
     // cadastro vai funcionar
     if (strcmp(aluno_name, "") != 0 && strcmp(lastReadTag, NO_TAG) != 0 && idExits(AlunosCadastrados, lastReadTag) == 0) {
         tagsListAppend(AlunosCadastrados, lastReadTag, aluno_name);
-        char response[TAG_ID_LEN + TAG_NAME_LEN  + LEN_BOTOES_CADASTRAR_RESPONSE + 28 + 1] = "Aluno ";
+        char response[TAG_ID_LEN + TAG_NAME_LEN  + LEN_BOTOES_CADASTRAR_RESPONSE + 100 + 1] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body> Aluno ";
         strcat(response, aluno_name); 
         strcat(response, " cadastrado com a tag ");
         strcat(response, lastReadTag);
@@ -213,29 +217,29 @@ esp_err_t cadastrar_aluno_handler(httpd_req_t *req)
     // cadastro não vai funcionar
     else {
         if (strcmp(aluno_name, "") == 0) { // não colocou nome
-            char response[LEN_BOTOES_CADASTRAR_RESPONSE + 135 + 1] = "Não foi possível realizar o cadastro, o nome do aluno não foi preenchido, clique no botão TELA DE CADASTRO abaixo para tentar novamente";
+            char response[LEN_BOTOES_CADASTRAR_RESPONSE + 135 + 1] = "N&atilde;o foi poss&iacute;vel realizar o cadastro, o nome do aluno n&atilde;o foi preenchido, clique no bot&atilde;o TELA DE CADASTRO abaixo para tentar novamente";
             strcat(response, botoes);
             httpd_resp_send(req, response, strlen(response));
         }
         else if (strcmp(lastReadTag, NO_TAG) == 0) { // não colocou tag
-            char response[LEN_BOTOES_CADASTRAR_RESPONSE + 145 + 1] = "Não foi possível realizar o cadastro, a tag não foi lida, passe uma tag no leitor e clique no botão TELA DE CADASTRO abaixo para tentar novamente";
+            char response[LEN_BOTOES_CADASTRAR_RESPONSE + 145 + 1] = "N&atilde;o foi poss&iacute;vel realizar o cadastro, a tag n&atilde;o foi lida, passe uma tag no leitor e clique no bot&atilde;o TELA DE CADASTRO abaixo para tentar novamente";
             strcat(response, botoes);
             httpd_resp_send(req, response, strlen(response));
         }
         else if (idExits(AlunosCadastrados, lastReadTag) == 1) { // a tag já estava cadastrada
             char aluno_da_tag_ja_cadastrada[TAG_NAME_LEN];
             getNameById(AlunosCadastrados, lastReadTag, aluno_da_tag_ja_cadastrada);
-            char response[TAG_ID_LEN + TAG_NAME_LEN + LEN_BOTOES_CADASTRAR_RESPONSE + 168 + 1] = "Não foi possível realizar o cadastro, ";
+            char response[TAG_ID_LEN + TAG_NAME_LEN + LEN_BOTOES_CADASTRAR_RESPONSE + 168 + 1] = "N&atilde;o foi poss&iacute;vel realizar o cadastro, ";
             strcat(response, " a tag ");
             strcat(response, lastReadTag);
-            strcat(response, " já está cadastrada com o aluno ");
+            strcat(response, " j&aacute; est&aacute; cadastrada com o aluno ");
             strcat(response, aluno_da_tag_ja_cadastrada);
-            strcat(response, ", passe outra tag no leitor e clique no botão TELA DE CADASTRO abaixo para tentar novamente");
+            strcat(response, ", passe outra tag no leitor e clique no bot&atilde;o TELA DE CADASTRO abaixo para tentar novamente");
             strcat(response, botoes);
             httpd_resp_send(req, response, strlen(response));
         }
         else { // motivo não identificado
-            char response[LEN_BOTOES_CADASTRAR_RESPONSE + 124 + 1] = "Não foi possível realizar o cadastro, motivo não identificado, clique no botão TELA DE CADASTRO abaixo para tentar novamente";
+            char response[LEN_BOTOES_CADASTRAR_RESPONSE + 124 + 1] = "N&atilde;o foi poss&iacute;vel realizar o cadastro, motivo n&atilde;o identificado, clique no bot&atilde;o TELA DE CADASTRO abaixo para tentar novamente";
             strcat(response, botoes);
             httpd_resp_send(req, response, strlen(response));
         }
