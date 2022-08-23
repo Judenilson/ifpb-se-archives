@@ -131,7 +131,7 @@ void wifi_init_sta(void)
     }
 }
 
-const char menu_resp[] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body><h3>Controle de Presença</h3><button><a href=\"/light\">Luzes</a></button><br><button><a href=\"/lista\">Lista de Presença</a></button><button><a href=\"/cadastros\">Lista de Cadastros</a></button><br><br><br><button><a href=\"/telegram\">Iniciar Aula</button></a><a href=\"/aulafim\"><button>Encerrar Aula</button></a><br><button><a href=\"/cadastro\">Cadastrar Aluno</a></button></body></html>";
+const char menu_resp[] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body><h3>Controle de Presença</h3><a href=\"/light\"><button>Luzes</button></a><br><a href=\"/lista\"><button>Lista de Presença</button></a><a href=\"/cadastros\"><button>Lista de Cadastros</button></a><br><br><br><a href=\"/telegram\"><button>Iniciar Aula</button></a><a href=\"/aulafim\"><button>Encerrar Aula</button></a><br><a href=\"/cadastro\"><button>Cadastrar Aluno</button></a></body></html>";
 const char on_resp[] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body><h3>LUZES da Sala: ACESAS</h3><a href=\"/off\"><button>DESLIGAR</button></a><a href=\"/\"><button>VOLTAR</button></a></body></html>";
 const char off_resp[] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body><h3>LUZES da Sala: APAGADAS</h3><a href=\"/on\"><button>LIGAR</button></a><a href=\"/\"><button>VOLTAR</button></a></body></html>";
 const char telegram_resp[] = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body><object width='0' height='0' type='text/html' data='https://api.telegram.org/bot5775630816:AAEuxojQRdMLpiVQINcnt0_iMWv87YQjsaM/sendMessage?chat_id=-708112312&text=AULA_INICIADA!!!'></object>Mensagem de início de aula enviada para o Telegram!<br><br><a href=\"/\"><button>VOLTAR</button></a></body></html>";
@@ -421,11 +421,10 @@ void tag_handler(uint8_t* sn) { // o número de série tem sempre 5 bytes
         char snum[4];
         snprintf(snum, 4, "%d", num);        
         strcat(tag, snum);
-        if (i != 4) strcat(tag, ".");
     }
 
     strcpy(lastReadTag, tag);
-    printf("Tag Atual: %s\n", lastReadTag);
+    printf("\nTag Atual: %s\n", lastReadTag);
 
     if (modo == MODE_READ_TAGS_FOR_PRESENCE && idExits(AlunosCadastrados, tag) == 1) {
         char name[TAG_NAME_LEN];
