@@ -541,36 +541,4 @@ void app_main(void)
     ESP_LOGI(TAGM, "ESP_WIFI_MODE_STA");
     wifi_init_sta();        
 	setup_server();
-
-    // saveFile("aluno_1_name", "Antonio Carlos");
-    // saveFile("aluno_1_id", "123123123123123");
-    // saveFile("aluno_2_name", "Judenilson Araújo");
-    // saveFile("aluno_2_id", "124124124124124");
-    // readFile("aluno_1_id");
-    // readFile("aluno_1_name");
-    // readFile("aluno_2_id");
-    // readFile("aluno_2_name");
-    // readFile(QUANT_CADASTROS);
-
-    // testando overwrite
-    // saveFile("aluno_1_name", "Antonio Carlos");
-    // saveFile("aluno_1_name", "Judenilson Araújo");
-    // readFile("aluno_1_name");
-
-    // testando delete
-    // saveFile("aluno_1_name", "Antonio Carlos");
-    // readFile("aluno_1_name");
-    // deleteFile("aluno_1_name");
-    // readFile("aluno_1_name");
-
-    // testango converção
-    tagsListAppend(AlunosCadastrados, "123123123123123", "antonio carlos");
-    tagsListAppend(AlunosCadastrados, "124124124124124", "judenilson araújo");
-    tagsListAppend(AlunosCadastrados, "125125125125125", "david victor");
-    char string[((TAG_ID_LEN + TAG_NAME_LEN) * 5) + 1];
-    getString(AlunosCadastrados, string);
-    printf("\n string = %s \n", string);
-
-    TagsList* newTagList = CreateTagsListFromString(string);
-    printTagsList(newTagList);
 }
