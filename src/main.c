@@ -19,6 +19,8 @@
 #include "rc522.c"
 #include "TagsList.h"
 
+#define QUANT_CADASTROS "quant_cadastros"
+
 #define MAX_TAGS 5
 #define TAG_ID_LEN 16
 #define TAG_NAME_LEN 50
@@ -513,4 +515,19 @@ void app_main(void)
     ESP_LOGI(TAGM, "ESP_WIFI_MODE_STA");
     wifi_init_sta();        
 	setup_server();
+
+    // saveFile("aluno_1_name", "Antonio Carlos");
+    // saveFile("aluno_1_id", "123123123123123");
+    // saveFile("aluno_2_name", "Judenilson Araújo");
+    // saveFile("aluno_2_id", "124124124124124");
+    // readFile("aluno_1_id");
+    // readFile("aluno_1_name");
+    // readFile("aluno_2_id");
+    // readFile("aluno_2_name");
+    // readFile(QUANT_CADASTROS);
+
+    // testando overwrite
+    saveFile("aluno_1_name", "Antonio Carlos");
+    saveFile("aluno_1_name", "Judenilson Araújo");
+    readFile("aluno_1_name");
 }
