@@ -38,22 +38,22 @@ Todo _Hardware_ apresentado no tópico 6.1 foi construído no aplicativo Fritzzi
 ### 6.1. Desenhos
 -   Breadboard
 
-![Visualização do Breadboard](https://github.com/Judenilson/projeto_se/blob/main/imgs/breadboard.png)
+![Visualização do Breadboard](https://github.com/Judenilson/projeto_se/blob/Master/imgs/breadboard.png)
 
 -   PCB
 
-![pcb](https://github.com/Judenilson/projeto_se/blob/main/imgs/pcb.png)
+![pcb](https://github.com/Judenilson/projeto_se/blob/Master/imgs/pcb.png)
 
 -   Esquema eletrônico
 
-![Schematic](https://github.com/Judenilson/projeto_se/blob/main/imgs/circuito_elétrico.png)
+![Schematic](https://github.com/Judenilson/projeto_se/blob/Master/imgs/circuito_elétrico.png)
 
 ## 7. Diagrama de Processo
 
-![Processo](https://github.com/Judenilson/projeto_se/blob/main/imgs/fluxograma_firmware.jpg)
+![Processo](https://github.com/Judenilson/projeto_se/blob/Master/imgs/fluxograma_firmware.jpg)
 
 ## 8. Diagrama de Bloco
 
-![Bloco](https://github.com/Judenilson/projeto_se/blob/main/imgs/diagrama_bloco_hardware.jpg)
+![Bloco](https://github.com/Judenilson/projeto_se/blob/Master/imgs/diagrama_bloco_hardware.jpg)
 
 ## 9. Resumo dos Resultados
