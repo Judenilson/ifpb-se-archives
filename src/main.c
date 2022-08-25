@@ -19,7 +19,7 @@
 #include "rc522.c"
 #include "TagsList.h"
 
-#define MAX_TAGS 5
+#define MAX_TAGS 30
 #define TAG_ID_LEN 16
 #define TAG_NAME_LEN 50
 #define NO_TAG "nenhuma tag"
