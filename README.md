@@ -38,12 +38,22 @@ Todo _Hardware_ apresentado no tópico 6.1 foi construído no aplicativo Fritzzi
 ### 6.1. Desenhos
 -   Breadboard
 
-![Visualização do Breadboard](https://github.com/Judenilson/projeto_se/blob/Master/imgs/Projeto%20Controle%20Acesso%20Alunos_bb.png)
+![Visualização do Breadboard](https://github.com/Judenilson/projeto_se/blob/main/imgs/breadboard.png)
 
 -   PCB
 
-![pcb](https://github.com/Judenilson/projeto_se/blob/Master/imgs/Projeto%20Controle%20Acesso%20Alunos_pcb.png)
+![pcb](https://github.com/Judenilson/projeto_se/blob/main/imgs/pcb.png)
 
--   Esquema elétrônico
+-   Esquema eletrônico
 
-![Schematic](https://github.com/Judenilson/projeto_se/blob/Master/imgs/Projeto%20Controle%20Acesso%20Alunos_schem.png)
+![Schematic](https://github.com/Judenilson/projeto_se/blob/main/imgs/circuito_elétrico.png)
+
+## 7. Diagrama de Processo
+
+![Processo](https://github.com/Judenilson/projeto_se/blob/main/imgs/fluxograma_firmware.jpg)
+
+## 8. Diagrama de Bloco
+
+![Bloco](https://github.com/Judenilson/projeto_se/blob/main/imgs/diagrama_bloco_hardware.jpg)
+
+## 9. Resumo dos Resultados
