@@ -57,3 +57,10 @@ Todo _Hardware_ apresentado no tópico 6.1 foi construído no aplicativo Fritzzi
 ![Bloco](https://github.com/Judenilson/projeto_se/blob/Master/imgs/diagrama_bloco_hardware.jpg)
 
 ## 9. Resumo dos Resultados
+
+Nesse projeto foi possível construir um protótipo capaz de realizar o registro de alunos através de Tags RFIDs, além disso, através do sistema online é possível acender e apagar as luzes da sala de aula, bem como disparar um aviso para toda a turma através do Telegram, informando o início e término da aula. 
+
+## 10. Conclusão
+
+Diante do projeto executado foi possível aprender a instalar e trabalhar com ESP-IDF, bem como, implementar um sistema com RFID, instalar componentes, criar novos componentes e realizar a implementação de threads.
+Para desenvolvimento futuro, segundo sugestão do professor Alexandre, fica o desafio de montar um sistema de baixo custo que possibilite realizar o salvamento das listas de presença num cartão de memória, para que o professor tenha possibilidade de escolher se quer manter a lista de presença ou não.
