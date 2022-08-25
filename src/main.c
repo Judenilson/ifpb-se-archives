@@ -29,8 +29,8 @@ char lastReadTag[TAG_ID_LEN] = NO_TAG;
 #define ALUNOS_CADASTRADOS "my_key"
 char string[((TAG_ID_LEN + TAG_NAME_LEN + 1 + 1) * MAX_TAGS) + 1] = "";
 
-#define WIFI_SSID		"TP-LINK_FE84"
-#define WIFI_PASSWORD	"71656137"
+#define WIFI_SSID		"COLOCAR NOME DA REDE"
+#define WIFI_PASSWORD	"COLOCAR SENHA DA REDE"
 #define MAXIMUM_RETRY   5
 
 #define LIGHT_PIN   GPIO_NUM_32
